@@ -10,6 +10,7 @@ object DarkSugars extends App {
   // syntax sugar #1: methods with single param
   def singleArgMethod(arg: Int): String = s"$arg little ducks..."
 
+  // The value return bu the code block will be argument
   val description = singleArgMethod {
     // write some complex code
     42
