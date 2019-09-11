@@ -12,6 +12,7 @@ object AdvancedPatternMatching extends App {
   }
 
   /*
+  Recap
     - constants
     - wildcards
     - case classes
@@ -19,13 +20,16 @@ object AdvancedPatternMatching extends App {
     - some special magic like above
    */
 
+  // Make the normal class can be used as extracting pattern
   class Person(val name: String, val age: Int)
 
+  // We define a singleton with unapply for pattern matching
   object Person {
     def unapply(person: Person): Option[(String, Int)] =
       if (person.age < 21) None
       else Some((person.name, person.age))
 
+    // One object can have more than one unapply
     def unapply(age: Int): Option[String] =
       Some(if (age < 21) "minor" else "major")
   }
@@ -48,6 +52,7 @@ object AdvancedPatternMatching extends App {
    */
 
   object even {
+    // We can define unapply returning a Boolean and discard the wildcard or any other extracting reference
     def unapply(arg: Int): Boolean = arg % 2 == 0
   }
 
@@ -65,6 +70,7 @@ object AdvancedPatternMatching extends App {
   println(mathProperty)
 
   // infix patterns
+  // infix type
   case class Or[A, B](a: A, b: B)
   val either = Or(2, "two")
   val humanDescription = either match {
