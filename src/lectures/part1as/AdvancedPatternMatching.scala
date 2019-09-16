@@ -79,6 +79,7 @@ object AdvancedPatternMatching extends App {
   println(humanDescription)
 
   // decomposing sequences
+  // when we don't know how many elements in the seq, but we know the beginning elements
   val vararg = numbers match {
     case List(1, _*) => "starting with 1"
   }
@@ -105,6 +106,7 @@ object AdvancedPatternMatching extends App {
   println(decomposed)
 
   // custom return types for unapply
+  // the return type of the unapply method can be another type different with Option
   // isEmpty: Boolean, get: something.
 
   abstract class Wrapper[T] {

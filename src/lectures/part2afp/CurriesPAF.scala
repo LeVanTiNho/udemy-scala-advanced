@@ -16,6 +16,7 @@ object CurriesPAF extends App {
   // METHOD!
   def curriedAdder(x: Int)(y: Int): Int = x + y // curried method
 
+  //def add4_1: Int => Int = curriedAdder(4)
   val add4: Int => Int = curriedAdder(4)
   // lifting = ETA-EXPANSION
 

@@ -59,6 +59,7 @@ class EmptySet[A] extends MySet[A] {
 // { x in A | property(x) }
 class PropertyBasedSet[A](property: A => Boolean) extends MySet[A] {
   def contains(elem: A): Boolean = property(elem)
+
   // { x in A | property(x) } + element = { x in A | property(x) || x == element }
   def +(elem: A): MySet[A] =
     new PropertyBasedSet[A](x => property(x) || x == elem)

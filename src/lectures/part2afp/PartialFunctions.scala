@@ -19,8 +19,10 @@ object PartialFunctions extends App {
     case 1 => 42
     case 2 => 56
     case 5 => 999
-  }
-  //  {1,2,5} => Int
+  } // Total function
+
+  // Domain {1, 2, 3} is a part of Int domain
+  // We use partial function for such case
 
   val aPartialFunction: PartialFunction[Int, Int] = {
     case 1 => 42
@@ -29,16 +31,19 @@ object PartialFunctions extends App {
   } // partial function value
 
   println(aPartialFunction(2))
-//  println(aPartialFunction(57273))
+  // println(aPartialFunction(57273))
 
-  // PF utilities
+  // Utilities
+
+  // isDefinedAt
   println(aPartialFunction.isDefinedAt(67))
 
-  // lift
-  val lifted = aPartialFunction.lift // Int => Option[Int]
+  // lift a partial function to a total function
+  val lifted = aPartialFunction.lift // Total function: Int => Option[Int]
   println(lifted(2))
   println(lifted(98))
 
+  // Chain partial functions
   val pfChain = aPartialFunction.orElse[Int, Int] {
     case 45 => 67
   }
@@ -61,7 +66,7 @@ object PartialFunctions extends App {
   println(aMappedList)
 
   /*
-    Note: PF can only have ONE parameter type
+    Note: PF can only have ONE parameter type ?? ONE parameter
    */
 
   /**
