@@ -94,6 +94,7 @@ object CurriesPAF extends App {
   byName(method)  // ok
   byName(parenMethod())
   byName(parenMethod) // ok but beware ==> byName(parenMethod())
+
   //  byName(() => 42) // not ok
   byName((() => 42)()) // ok
   //  byName(parenMethod _) // not ok
@@ -104,4 +105,3 @@ object CurriesPAF extends App {
   byFunction(() => 46) // works
   byFunction(parenMethod _) // also works, but warning- unnecessary
 }
-
