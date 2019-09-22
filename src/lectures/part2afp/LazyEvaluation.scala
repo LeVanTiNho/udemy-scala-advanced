@@ -6,6 +6,7 @@ package lectures.part2afp
 object LazyEvaluation extends App {
 
   // lazy DELAYS the evaluation of values
+  // lazy val is only evaluated when it is used for the first time
   lazy val x: Int = {
     println("hello")
     42

@@ -104,4 +104,11 @@ object CurriesPAF extends App {
   byFunction(parenMethod) // compiler does ETA-expansion
   byFunction(() => 46) // works
   byFunction(parenMethod _) // also works, but warning- unnecessary
+
+  /*
+  by-name parameters:
+    + Being evaluated when being used
+    + Only accept argument with type of that parameter
+  by-function parameter: Accept function
+   */
 }
