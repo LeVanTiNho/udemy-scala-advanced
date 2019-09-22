@@ -2,9 +2,10 @@ package lectures.part3concurrency
 
 import java.util.concurrent.Executors
 
-/**
-  * Created by Daniel.
-  */
+/*
+  We will focus on the manipulation and communication of threads in JVM
+  The JVM threads can run in parallel
+ */
 object Intro extends App {
 
   /*
@@ -19,7 +20,12 @@ object Intro extends App {
   val aThread = new Thread(runnable)
 
   aThread.start() // gives the  signal to the JVM to start a JVM thread
+  /*
+  In-code threads vs JVM Threads,
+  JVM threads will execute the code in run method
+   */
   // create a JVM thread => OS thread
+
   runnable.run() // doesn't do anything in parallel!
   aThread.join() // blocks until aThread finishes running
 
