@@ -7,7 +7,9 @@ import java.util.concurrent.Executors
   The JVM threads can run in parallel
  */
 object Intro extends App {
-
+  /**
+    *
+    */
   /*
     interface Runnable {
       public void run()
@@ -36,27 +38,35 @@ object Intro extends App {
   // different runs produce different results!
 
   // executors
+  // The starting and killing a thread cost a lot, so JVM allows reuse threads
   val pool = Executors.newFixedThreadPool(10)
-  //  pool.execute(() => println("something in the thread pool"))
+    pool.execute(() => println("something in the thread pool"))
 
-  //  pool.execute(() => {
-  //    Thread.sleep(1000)
-  //    println("done after 1 second")
-  //  })
-  //
-  //  pool.execute(() => {
-  //    Thread.sleep(1000)
-  //    println("almost done")
-  //    Thread.sleep(1000)
-  //    println("done after 2 seconds")
-  //  })
+    pool.execute(() => {
+      //Thread.sleep(1000)
+      println("done after 1 second")
+    })
+
+    pool.execute(() => {
+      //Thread.sleep(1000)
+      println("almost done")
+      //Thread.sleep(1000)
+      println("done after 2 seconds")
+    })
 
   pool.shutdown()
-  //  pool.execute(() => println("should not appear")) // throws an exception in the calling thread
+  // No more actions are submitted, but wait for the actions previously submitted is executed and terminates
 
-  // pool.shutdownNow()
+  // pool.execute(() => println("should not appear")) // throws an exception in the calling thread
+
+  pool.shutdownNow()
+  // force all the threads shutdown, no waiting for the actions previously submitted is executed and terminates
+
   println(pool.isShutdown) // true
 
+  /**
+    *
+    */
   def runInParallel = {
     var x = 0
 
@@ -103,7 +113,6 @@ object Intro extends App {
       - account = 50000 - 3000 = 47000
     thread2 (iphone): 50000
       - account = 50000 - 4000 = 46000 overwrites the memory of account.amount
-   */
 
   // option #1: use synchronized()
   def buySafe(account: BankAccount, thing: String, price: Int) =
@@ -116,7 +125,7 @@ object Intro extends App {
 
   // option #2: use @volatile
 
-  /**
+  *
     * Exercises
     *
     * 1) Construct 50 "inception" threads
@@ -124,7 +133,6 @@ object Intro extends App {
     *     println("hello from thread #3")
     *   in REVERSE ORDER
     *
-    */
   def inceptionThreads(maxThreads: Int, i: Int = 1): Thread = new Thread(() => {
     if (i < maxThreads) {
       val newThread = inceptionThreads(maxThreads, i + 1)
@@ -136,13 +144,10 @@ object Intro extends App {
 
   inceptionThreads(50).start()
 
-  /*
     2
-   */
   var x = 0
   val threads = (1 to 100).map(_ => new Thread(() => x += 1))
   threads.foreach(_.start())
-  /*
     1) what is the biggest value possible for x? 100
     2) what is the SMALLEST value possible for x? 1
 
@@ -152,13 +157,10 @@ object Intro extends App {
     thread100: x = 0
 
     for all threads: x = 1 and write it back to x
-   */
   threads.foreach(_.join())
   println(x)
 
-  /*
     3 sleep fallacy
-   */
   var message = ""
   val awesomeThread = new Thread(() => {
     Thread.sleep(1000)
@@ -170,7 +172,6 @@ object Intro extends App {
   Thread.sleep(1001)
   awesomeThread.join() // wait for the awesome thread to join
   println(message)
-  /*
     what's the value of message? almost always "Scala is awesome"
     is it guaranteed? NO!
     why? why not?
@@ -187,11 +188,9 @@ object Intro extends App {
     (OS gives the CPU to awesomethread)
       message = "Scala is awesome"
 
-   */
 
   // how do we fix this?
   // syncrhonizing does NOT work
 
-
+*/
 }
-
