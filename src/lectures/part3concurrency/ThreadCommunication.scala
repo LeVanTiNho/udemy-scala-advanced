@@ -67,10 +67,12 @@ object ThreadCommunication extends App {
 
     val producer = new Thread(() => {
       println("[producer] Hard at work...")
-      Thread.sleep(2000)
-      val value = 42
 
       container.synchronized {
+
+        Thread.sleep(2000)
+        val value = 42
+
         println("[producer] I'm producing " + value)
         container.set(value)
         container.notify()
