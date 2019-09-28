@@ -6,8 +6,10 @@ import scala.concurrent.duration._
 
 // important for futures
 import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
-  * Created by Daniel.
+  * What is Futures?
+  * Future is a functional way of computing something in parallel or on another thread
   */
 object FuturesPromises extends App {
 
@@ -16,6 +18,10 @@ object FuturesPromises extends App {
     42
   }
 
+  /**
+    * The Apply method of Future object requires implicitly an ExecutionContext
+    * We can use the gobal execution context for Futures
+    */
   val aFuture = Future {
     calculateMeaningOfLife // calculates the  meaning of  life on ANOTHER thread
   } // (global) which is passed by the compiler
