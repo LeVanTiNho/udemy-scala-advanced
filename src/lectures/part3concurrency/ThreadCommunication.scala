@@ -175,7 +175,8 @@ object ThreadCommunication extends App {
           val x = buffer.dequeue() // OOps.!
           println(s"[consumer $id] consumed " + x)
 
-          buffer.notifyAll()
+          buffer.notify()
+          //buffer.notifyAll()
         }
 
         Thread.sleep(random.nextInt(250))
@@ -199,7 +200,8 @@ object ThreadCommunication extends App {
           println(s"[producer $id] producing " + i)
           buffer.enqueue(i)
 
-          buffer.notifyAll()
+          buffer.notify()
+          //buffer.notifyAll()
 
           i += 1
         }
@@ -220,13 +222,20 @@ object ThreadCommunication extends App {
   // multiProdCons(3, 6)
 
   /*
+  Notes:
+    + A thread notifies method wake up the waiting threads,
+    but only when it release the lock of monitor the waiting threads (already notified) can get the lock,
+    Does the waiting threads have the right to get the lock before the threads that are trying to get the lock?
+   */
+
+  /*
     Exercises.
     1) think of an example where notifyALL acts in a different way than notify?
     2) create a deadlock
     3) create a livelock
    */
 
-  // notifyall
+  // notifyAll
   def testNotifyAll(): Unit = {
     val bell = new Object
 
@@ -242,7 +251,8 @@ object ThreadCommunication extends App {
       Thread.sleep(2000)
       println("[announcer] Rock'n roll!")
       bell.synchronized {
-        bell.notify()
+        bell.notify() // just one thread is waked up
+        // bell.notifyAll()
       }
     }).start()
   }
@@ -250,7 +260,13 @@ object ThreadCommunication extends App {
   // testNotifyAll()
 
   // 2 - deadlock
+  /*
+  What is deadlock?
+    Deadlock occurs when two threads block each other, no thread can continue
+   */
   case class Friend(name: String) {
+
+    // for deadlock
     def bow(other: Friend) = {
       this.synchronized {
         println(s"$this: I am bowing to my friend $other")
@@ -265,6 +281,7 @@ object ThreadCommunication extends App {
       }
     }
 
+    // for livelock
     var side = "right"
     def switchSide(): Unit = {
       if (side == "right") side = "left"
