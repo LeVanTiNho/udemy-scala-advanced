@@ -181,6 +181,10 @@ object FuturesPromises extends App {
   producer.start()
   Thread.sleep(1000)
 
+  /**
+    * Exercises
+    */
+
   /*
     1) fulfill a future IMMEDIATELY with a value
     2) inSequence(fa, fb)

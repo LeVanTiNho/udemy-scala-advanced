@@ -2,6 +2,8 @@ package lectures.part4implicits
 
 object ImplicitsIntro extends App {
 
+  // "Daniel" string implicitly is converted to ArrowAssoc object
+  // ArrowAssoc is a wrapper of the generic type A, is this case is String
   val pair = "Daniel" -> "555"
   val intPair = 1 -> 2
 
@@ -11,7 +13,10 @@ object ImplicitsIntro extends App {
 
   implicit def fromStringToPerson(str: String): Person = Person(str)
 
-  println("Peter".greet) // println(fromStringToPerson("Peter").greet)
+  println("Peter".greet)
+  // Firstly, the compiler looks for the implicit method for convert a String to some type, in this case is Person
+  // after that, the compiler will know the methods of Person can be applied to the String
+  // println(fromStringToPerson("Peter").greet)
 
 //  class A {
 //    def greet: Int = 2
