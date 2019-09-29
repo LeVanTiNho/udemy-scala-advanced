@@ -19,8 +19,9 @@ object FuturesPromises extends App {
   }
 
   /**
-    * The Apply method of Future object requires implicitly an ExecutionContext
-    * We can use the gobal execution context for Futures
+    * The Apply method of Future object requires implicitly an ExecutionContext.
+    * ExecutionContext is used to config the Thread pool to execute Futures.
+    * We can use the global execution context for Futures.
     */
   val aFuture = Future {
     calculateMeaningOfLife // calculates the  meaning of  life on ANOTHER thread
@@ -31,9 +32,10 @@ object FuturesPromises extends App {
 
   println("Waiting on the future")
   aFuture.onComplete {
+    // This block is literal of PF, we can use the ful Function1 here
     case Success(meaningOfLife) => println(s"the meaning of life is $meaningOfLife")
     case Failure(e) => println(s"I have failed with $e")
-  } // SOME thread
+  } // SOME thread, so this method runs in parallel, requires an ExecutionContext
 
   Thread.sleep(3000)
 
@@ -72,24 +74,24 @@ object FuturesPromises extends App {
   }
 
   // client: mark to poke bill
-  val mark = SocialNetwork.fetchProfile("fb.id.1-zuck")
-//  mark.onComplete {
-//    case Success(markProfile) => {
-//      val bill = SocialNetwork.fetchBestFriend(markProfile)
-//      bill.onComplete {
-//        case Success(billProfile) => markProfile.poke(billProfile)
-//        case Failure(e) => e.printStackTrace()
-//      }
-//    }
-//    case Failure(ex) => ex.printStackTrace()
-//  }
+  val futureOfMarkProfile = SocialNetwork.fetchProfile("fb.id.1-zuck")
+  futureOfMarkProfile.onComplete {
+    case Success(markProfile) => {
+      val bill = SocialNetwork.fetchBestFriend(markProfile)
+      bill.onComplete {
+        case Success(billProfile) => markProfile.poke(billProfile)
+        case Failure(e) => e.printStackTrace()
+      }
+    }
+    case Failure(ex) => ex.printStackTrace()
+  } // the onComplete method run on some Thread that we don't know
 
 
   // functional composition of futures
   // map, flatMap, filter
-  val nameOnTheWall = mark.map(profile => profile.name)
-  val marksBestFriend = mark.flatMap(profile => SocialNetwork.fetchBestFriend(profile))
-  val zucksBestFriendRestricted = marksBestFriend.filter(profile => profile.name.startsWith("Z"))
+  val nameOnTheWall = futureOfMarkProfile.map(profile => profile.name) // Future(String),
+  val marksBestFriend = futureOfMarkProfile.flatMap(profile => SocialNetwork.fetchBestFriend(profile))
+  val zuckBestFriendRestricted = marksBestFriend.filter(profile => profile.name.startsWith("Z"))
 
   // for-comprehensions
   for {
@@ -110,9 +112,13 @@ object FuturesPromises extends App {
 
   val fallbackResult =  SocialNetwork.fetchProfile("unknown id").fallbackTo(SocialNetwork.fetchProfile("fb.id.0-dummy"))
 
+  /**
+    * Blocking on Futures
+   */
+
   // online banking app
   case class User(name: String)
-  case class Transaction(sender: String, receiver: String, amount: Double, status: String)
+  case class Transaction(sender: String, receiver: String, amount: Double, status: String) // stores the info of transactions
 
   object BankingApp {
     val name = "Rock the JVM banking"
@@ -123,7 +129,7 @@ object FuturesPromises extends App {
       User(name)
     }
 
-    def createTransaction(user: User, merchantName: String, amount: Double): Future[Transaction] = Future {
+    def doTransaction(user: User, merchantName: String, amount: Double): Future[Transaction] = Future {
       // simulate some processes
       Thread.sleep(1000)
       Transaction(user.name, merchantName, amount, "SUCCESS")
@@ -135,16 +141,25 @@ object FuturesPromises extends App {
       // WAIT for the transaction to finish
       val transactionStatusFuture = for {
         user <- fetchUser(username)
-        transaction <- createTransaction(user, merchantName, cost)
-      } yield transaction.status
+        transaction <- doTransaction(user, merchantName, cost)
+      } yield transaction.status // Return Future[String]
 
+      // Throw TimeoutException if the awaitable is not ready after atMost passed
+      // Await.result will block the Thread is executing the main method
       Await.result(transactionStatusFuture, 2.seconds) // implicit conversions -> pimp my library
     }
   }
 
   println(BankingApp.purchase("Daniel", "iPhone 12", "rock the jvm store", 3000))
 
-  // promises
+  /*
+  Note: map, flatMap, filter on Futures will return new Futures, the tasks of the old Futures will be processed in parallel,
+  the result when that task done will be return in the sew Futures
+   */
+
+  /**
+    * Promise
+    */
 
   val promise = Promise[Int]() // "controller" over a future
   val future = promise.future

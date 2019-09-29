@@ -1,8 +1,5 @@
 package lectures.part4implicits
 
-/**
-  * Created by Daniel.
-  */
 object ImplicitsIntro extends App {
 
   val pair = "Daniel" -> "555"
