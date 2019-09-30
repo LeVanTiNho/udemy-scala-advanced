@@ -2,11 +2,12 @@ package exercises
 
 import scala.annotation.tailrec
 
-
-/**
-  * Created by Daniel.
-  */
-
+/*
+  Stream?
+  Stream is a special collection:
+    + The head (first element) is available
+    + The tail (following elements) is evaluated when needed
+ */
 abstract class MyStream[+A] {
   def isEmpty: Boolean
   def head: A
@@ -52,11 +53,16 @@ object EmptyStream extends MyStream[Nothing] {
   def take(n: Int): MyStream[Nothing] = this
 }
 
+/*
+  tl is a call-by-name para, it will be evaluated when used
+ */
 class Cons[+A](hd: A, tl: => MyStream[A]) extends MyStream[A] {
   def isEmpty: Boolean = false
 
+  // Scala allow override the head def in MyStream by head val
   override val head: A = hd
   override lazy val tail: MyStream[A] = tl  // call by need
+
   /*
     val s = new Cons(1, EmptyStream)
     val prepended = 1 #:: s = new Cons(1, s)
@@ -143,4 +149,40 @@ object StreamsPlayground extends App{
     else new Cons(numbers.head, eratosthenes(numbers.tail.filter(_ % numbers.head != 0)))
 
   println(eratosthenes(MyStream.from(2)(_ + 1)).take(100).toList())
+}
+
+object Test1 extends App {
+  class A {
+    lazy val a: Int = {
+      print("evaluating a")
+      1
+    }
+
+    def sum(b: Int) = {a + b}
+
+    def multiply(b: Int) = {a * b}
+  }
+
+  val ob = new A
+
+  ob sum 2 // a is evaluated
+  ob multiply 2 // a is evaluated before
+}
+
+object Test2 extends App {
+  class A(anInt: => Int) {
+    lazy val a: Int = anInt
+
+    def sum(b: Int) = {a + b}
+
+    def multiply(b: Int) = {a * b}
+  }
+
+  val ob = new A((() => {
+    println("evaluating")
+    1
+  })())
+
+  ob sum 2 // a is evaluated
+  ob multiply 2 // a is evaluated before
 }

@@ -89,6 +89,9 @@ object Monads extends App {
     // call by need
     private lazy val internalValue = value
     def use: A = internalValue
+
+    // => A means by-name para
+    // Why f must be by-name function? Cus we need to delay the evaluation of A para
     def flatMap[B](f: (=> A) => Lazy[B]): Lazy[B] = f(internalValue)
   }
   object Lazy {
@@ -103,6 +106,7 @@ object Monads extends App {
   val flatMappedInstance = lazyInstance.flatMap(x => Lazy {
     10 * x
   })
+
   val flatMappedInstance2 = lazyInstance.flatMap(x => Lazy {
     10 * x
   })
@@ -111,17 +115,19 @@ object Monads extends App {
 
   /*
     left-identity
-    unit.flatMap(f) = f(v)
-    Lazy(v).flatMap(f) = f(v)
+      unit.flatMap(f) = f(v)
+      Lazy(v).flatMap(f) = f(v)
 
     right-identity
-    l.flatMap(unit) = l
-    Lazy(v).flatMap(x => Lazy(x)) = Lazy(v)
+      l.flatMap(unit) = l
+      Lazy(v).flatMap(x => Lazy(x)) = Lazy(v)
 
     associativity: l.flatMap(f).flatMap(g) = l.flatMap(x => f(x).flatMap(g))
 
-    Lazy(v).flatMap(f).flatMap(g) = f(v).flatMap(g)
-    Lazy(v).flatMap(x => f(x).flatMap(g)) = f(v).flatMap(g)
+      (1) Lazy(v).flatMap(f).flatMap(g) = f(v).flatMap(g)
+
+      From left-identity, we have:
+      (2) Lazy(v).flatMap(x => f(x).flatMap(g)) = f(v).flatMap(g)
    */
 
   // 2: map and flatten in terms  of flatMap
@@ -136,5 +142,12 @@ object Monads extends App {
       List(List(1, 2), List(3, 4)).flatten = List(List(1, 2), List(3, 4)).flatMap(x => x) = List(1,2,3,4)
     }
 
+   */
+
+  /*
+  Conclusion:
+  + A Monad type must satisfy 3 laws of Monad: Left-identity, right-identity, associativity
+  + Associativity can be proved by left-indetity
+  + From flatMap we can implement map and flatten
    */
 }
