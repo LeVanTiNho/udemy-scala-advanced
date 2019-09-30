@@ -20,12 +20,14 @@ object CurriesPAF extends App {
   // lifting = ETA-EXPANSION
   // ETA-EXPANSION: The compiler turn a method into a function
 
-  // functions != methods (JVM limitation)
-  // functions: is treated as objects, we can pass it as parameter and return it as result of other functions
-  // methods: is members of class, trait, singleton
+  /*
+    functions != methods (JVM limitation
+    functions: is treated as objects, we can pass it as parameter and return it as result of other functions
+    methods: is members of class, trait, singleton
+  */
 
   def inc(x: Int) = x + 1
-  // List(1,2,3).map(inc)
+  List(1,2,3).map(inc)
   List(1,2,3).map(x => inc(x))  // ETA-expansion - the process of transform a method to a function
 
   // Partial function applications
@@ -40,6 +42,7 @@ object CurriesPAF extends App {
   // as many different implementations of add7 using the above
   // be creative!
   val add7 = (x: Int) => simpleAddFunction(7, x)  // simplest
+
   val add7_2 = simpleAddFunction.curried(7)
   val add7_6 = simpleAddFunction(7, _: Int) // works as well
 
