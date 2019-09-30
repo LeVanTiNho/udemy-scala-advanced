@@ -1,16 +1,17 @@
 package lectures.part4implicits
 
-/**
-  * Created by Daniel.
-  */
 object OrganizingImplicits extends App {
 
-  implicit def reverseOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
-//  implicit val normalOrdering: Ordering[Int] = Ordering.fromLessThan(_ < _)
+  /**
+    * Implicit parameters
+    */
+  implicit val reverseOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
+  // implicit def reverseOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
+  // implicit val normalOrdering: Ordering[Int] = Ordering.fromLessThan(_ < _)
 
   println(List(1,4,5,3,2).sorted)
 
-  // scala.Predef
+  // scala.Predef is automatically imported to code here
 
   /*
     Implicits (used as implicit parameters):
@@ -28,22 +29,28 @@ object OrganizingImplicits extends App {
     Person("John", 66)
   )
 
-//  object Person {
-//    implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
-//  }
-//  implicit val ageOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.age < b.age)
-//  println(persons.sorted)
+/*  object Person {
+    implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
+  }
 
-  /*
+  implicit val ageOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.age < b.age)
+  println(persons.sorted)*/
+
+  /**
     Implicit scope
     - normal scope = LOCAL SCOPE
     - imported scope
     - companions of all types involved in the method signature
+
+    vd: def sorted[B >: A](implicit ord: Ordering[B]): List[B]
       - List
       - Ordering
       - all the types involved = A or any supertype
    */
-  // def sorted[B >: A](implicit ord: Ordering[B]): List[B]
+
+  /**
+    * Best practise
+    */
 
   object AlphabeticNameOrdering {
     implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
