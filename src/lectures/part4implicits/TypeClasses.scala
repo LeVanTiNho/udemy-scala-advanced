@@ -1,10 +1,16 @@
 package lectures.part4implicits
 
 /**
-  * Created by Daniel.
+  * What is type classes?
+  * A type class is a trait, that ticks a type and describes what operations can be applied to this type
   */
 object TypeClasses extends App {
 
+  /**
+    * We want to define classes, its instances can be serialized to HTML
+    */
+
+  // Option 1: trait (interface)
   trait HTMLWritable {
     def toHtml: String
   }
@@ -33,10 +39,14 @@ object TypeClasses extends App {
     3 - still ONE implementation
    */
 
+  /**
+    * Type class
+    */
   trait HTMLSerializer[T] {
     def serialize(value: T): String
   }
 
+  // type class instance
   implicit object UserSerializer extends HTMLSerializer[User] {
     def serialize(user: User): String = s"<div>${user.name} (${user.age} yo) <a href=${user.email}/> </div>"
   }
@@ -44,15 +54,37 @@ object TypeClasses extends App {
   val john = User("John", 32, "john@rockthejvm.com")
   println(UserSerializer.serialize(john))
 
-  // 1 - we can define serializers for other  types
+  // 1 - we can define serializers for other types
   import java.util.Date
   object DateSerializer extends HTMLSerializer[Date] {
     override def serialize(date: Date): String = s"<div>${date.toString()}</div>"
   }
 
-  // 2 - we can define MULTIPLE serializers
+  // 2 - we can define MULTIPLE serializers fon one type
   object PartialUserSerializer extends HTMLSerializer[User] {
-    def serialize(user: User): String = s"<div>${user.name} </div>"
+    override def serialize(user: User): String = s"<div>${user.name} </div>"
+  }
+
+  // Type class template
+  // All the implementor of this trait must provide the implementation of the action
+  trait MyTypeClassTemplate[T] {
+    def action(value: T): Any
+  }
+
+  /*
+  Exercise
+    Equality
+   */
+  trait Equal[T] {
+    def apply(a: T, b: T): Boolean
+  }
+
+  object NameEquality extends Equal[User] {
+    override def apply(a: User, b: User): Boolean = a.name == b.name
+  }
+
+  object FullEquality extends Equal[User] {
+    override def apply(a: User, b: User): Boolean = a.name == b.name && a.email == b.email
   }
 
   // part 2

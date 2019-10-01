@@ -73,6 +73,7 @@ object OrganizingImplicits extends App {
    */
   case class Purchase(nUnits: Int, unitPrice: Double)
   object Purchase {
+    // The most used implicit will be putted in the companion, the others will putted in another object, when need we import them
     implicit val totalPriceOrdering: Ordering[Purchase] = Ordering.fromLessThan((a,b) => a.nUnits * a.unitPrice < b.nUnits * b.unitPrice)
   }
 
@@ -83,6 +84,4 @@ object OrganizingImplicits extends App {
   object UnitPriceOrdering {
     implicit val unitPriceOrdering: Ordering[Purchase] = Ordering.fromLessThan(_.unitPrice < _.unitPrice)
   }
-
-
 }
