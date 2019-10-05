@@ -1,7 +1,7 @@
 package lectures.part4implicits
 
 /**
-  * Created by Daniel.
+  * Use implicits to pimp a library
   */
 object PimpMyLibrary extends App {
 
@@ -40,6 +40,7 @@ object PimpMyLibrary extends App {
 
   42.isEven // new RichInt(42).isEven
   // type enrichment = pimping
+  // type enrichment: Add more behaviors or properties to a type
 
   1 to 10
 
@@ -50,6 +51,7 @@ object PimpMyLibrary extends App {
   //  42.isOdd
 
   /*
+  Exercises:
     Enrich the String class
     - asInt
     - encrypt

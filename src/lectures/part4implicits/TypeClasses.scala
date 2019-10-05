@@ -7,6 +7,9 @@ package lectures.part4implicits
 object TypeClasses extends App {
 
   /**
+    * Part 1: Type class
+    */
+  /**
     * We want to define classes, its instances can be serialized to HTML
     */
 
@@ -66,9 +69,12 @@ object TypeClasses extends App {
   }
 
   // Type class template
-  // All the implementor of this trait must provide the implementation of the action
   trait MyTypeClassTemplate[T] {
     def action(value: T): Any
+  }
+
+  object MyTypeClassTemplate {
+    def apply[T](implicit instance: MyTypeClassTemplate[T]) = instance
   }
 
   /*
@@ -87,11 +93,14 @@ object TypeClasses extends App {
     override def apply(a: User, b: User): Boolean = a.name == b.name && a.email == b.email
   }
 
-  // part 2
+  /**
+    * Part 2: implicits and type class
+    */
   object HTMLSerializer {
     def serialize[T](value: T)(implicit serializer: HTMLSerializer[T]): String =
       serializer.serialize(value)
 
+    // Better design
     def apply[T](implicit serializer: HTMLSerializer[T]) = serializer
   }
 
@@ -102,11 +111,30 @@ object TypeClasses extends App {
   println(HTMLSerializer.serialize(42))
   println(HTMLSerializer.serialize(john))
 
-  // access to the entire type class  interface
+  // access to the entire type class interface
   println(HTMLSerializer[User].serialize(john))
 
+  /*
+  Exercise: implement the type class pattern for the Equality
+   */
 
-  // part 3
+  object Equal {
+    def apply[T](a: T, b: T)(implicit equalizer: Equal[T]): Boolean =
+      equalizer.apply(a, b)
+  }
+
+  /*
+  Equal type-class instances and HTMLSerializer type-class instances
+  will be as implicits for the compiler looks for them when needing.
+  */
+
+  /*
+  Ad-hoc polymorphism = type class + implicit
+   */
+
+  /**
+    * Part 3
+    */
   implicit class HTMLEnrichment[T](value: T) {
     def toHTML(implicit serializer: HTMLSerializer[T]): String = serializer.serialize(value)
   }
