@@ -135,11 +135,15 @@ object TypeClasses extends App {
   /**
     * Part 3
     */
+
+  /*
+  The HTMLEnrichment class is a wrapper of an generic type
+   */
   implicit class HTMLEnrichment[T](value: T) {
     def toHTML(implicit serializer: HTMLSerializer[T]): String = serializer.serialize(value)
   }
 
-  println(john.toHTML)  // println(new HTMLEnrichment[User](john).toHTML(UserSerializer))
+  println(john.toHtml)  // println(new HTMLEnrichment[User](john).toHTML(UserSerializer))
   // COOL!
   /*
     - extend to new types

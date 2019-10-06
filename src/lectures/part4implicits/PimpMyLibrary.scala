@@ -5,7 +5,11 @@ package lectures.part4implicits
   */
 object PimpMyLibrary extends App {
 
-  // 2.isPrime
+  /**
+    * Implicit classes
+    * Implicit conversions (like implicit method/functions)
+    * Wrapper as implicit classes
+    */
 
   implicit class RichInt(val value: Int) extends AnyVal {
     def isEven: Boolean = value % 2 == 0
@@ -84,6 +88,7 @@ object PimpMyLibrary extends App {
   implicit def enrich(value: Int): RichAltInt = new RichAltInt(value)
 
   // danger zone
+  // Use implicit method as little as possible
   implicit def intToBoolean(i: Int): Boolean = i == 1
 
   /*

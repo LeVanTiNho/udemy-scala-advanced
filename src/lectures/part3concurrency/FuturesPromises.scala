@@ -155,7 +155,7 @@ object FuturesPromises extends App {
   /*
   Note: map, flatMap, filter on Futures will return new Futures, the tasks of the old Futures will be processed in parallel,
   the result when that task done will be return in the sew Futures
-   */
+    */
 
   /**
     * Promise
