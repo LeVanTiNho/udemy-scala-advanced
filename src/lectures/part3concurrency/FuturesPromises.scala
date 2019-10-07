@@ -27,12 +27,12 @@ object FuturesPromises extends App {
     calculateMeaningOfLife // calculates the  meaning of  life on ANOTHER thread
   } // (global) which is passed by the compiler
 
-
+  Thread.sleep(3000)
   println(aFuture.value) // Option[Try[Int]]
 
   println("Waiting on the future")
   aFuture.onComplete {
-    // This block is literal of PF, we can use the ful Function1 here
+    // This block is literal of partial function, we can use the full Function1 here
     case Success(meaningOfLife) => println(s"the meaning of life is $meaningOfLife")
     case Failure(e) => println(s"I have failed with $e")
   } // SOME thread, so this method runs in parallel, requires an ExecutionContext
@@ -63,11 +63,14 @@ object FuturesPromises extends App {
     def fetchProfile(id: String): Future[Profile] = Future {
       // fetching from the DB
       Thread.sleep(random.nextInt(300))
+
+      // If the name map hasn't the key, an exception will be thrown, the future returned will be a failed future
       Profile(id, names(id))
     }
 
     def fetchBestFriend(profile: Profile): Future[Profile] = Future {
       Thread.sleep(random.nextInt(400))
+      // Potentially Throwing an exception
       val bfId = friends(profile.id)
       Profile(bfId, names(bfId))
     }
@@ -75,6 +78,9 @@ object FuturesPromises extends App {
 
   // client: mark to poke bill
   val futureOfMarkProfile = SocialNetwork.fetchProfile("fb.id.1-zuck")
+
+  // the onComplete method run on some Thread that we don't know
+  // When the Future completes, it the onComplete a Try
   futureOfMarkProfile.onComplete {
     case Success(markProfile) => {
       val bill = SocialNetwork.fetchBestFriend(markProfile)
@@ -84,12 +90,12 @@ object FuturesPromises extends App {
       }
     }
     case Failure(ex) => ex.printStackTrace()
-  } // the onComplete method run on some Thread that we don't know
+  }
 
 
   // functional composition of futures
   // map, flatMap, filter
-  val nameOnTheWall = futureOfMarkProfile.map(profile => profile.name) // Future(String),
+  val futureOfMarkName = futureOfMarkProfile.map(profile => profile.name)
   val marksBestFriend = futureOfMarkProfile.flatMap(profile => SocialNetwork.fetchBestFriend(profile))
   val zuckBestFriendRestricted = marksBestFriend.filter(profile => profile.name.startsWith("Z"))
 
@@ -101,8 +107,8 @@ object FuturesPromises extends App {
 
   Thread.sleep(1000)
 
-  // fallbacks
-  val aProfileNoMatterWhat = SocialNetwork.fetchProfile("unknown id").recover {
+  // fallbacks:
+  val aProfileNoMatterWhat = SocialNetwork.fetchProfile("unknown id") recover {
     case e: Throwable => Profile("fb.id.0-dummy", "Forever alone")
   }
 
@@ -112,6 +118,9 @@ object FuturesPromises extends App {
 
   val fallbackResult =  SocialNetwork.fetchProfile("unknown id").fallbackTo(SocialNetwork.fetchProfile("fb.id.0-dummy"))
 
+  /**
+    * Here
+    */
   /**
     * Blocking on Futures
    */
