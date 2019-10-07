@@ -107,7 +107,7 @@ object FuturesPromises extends App {
 
   Thread.sleep(1000)
 
-  // fallbacks:
+  // fallbacks
   val aProfileNoMatterWhat = SocialNetwork.fetchProfile("unknown id") recover {
     case e: Throwable => Profile("fb.id.0-dummy", "Forever alone")
   }
