@@ -1,5 +1,6 @@
 package lectures.part4implicits
 
+// Lesson 2
 object OrganizingImplicits extends App {
 
   /**
@@ -19,6 +20,10 @@ object OrganizingImplicits extends App {
       - object
       - accessor methods = defs with no parentheses
    */
+
+  /**
+    * Here
+    */
 
   // Exercise
   case class Person(name: String, age: Int)

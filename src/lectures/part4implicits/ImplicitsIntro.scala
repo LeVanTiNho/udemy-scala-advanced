@@ -1,7 +1,11 @@
 package lectures.part4implicits
 
+// Lesson 1
 object ImplicitsIntro extends App {
 
+  /**
+    * implicit class
+    */
   // "Daniel" string implicitly is converted to ArrowAssoc object
   // ArrowAssoc is a wrapper of the generic type A, is this case is String
   val pair = "Daniel" -> "555"
@@ -11,6 +15,9 @@ object ImplicitsIntro extends App {
     def greet = s"Hi, my name is $name!"
   }
 
+  /**
+    * conversion method (implicit method)
+    */
   implicit def fromStringToPerson(str: String): Person = Person(str)
 
   println("Peter".greet)
@@ -23,11 +30,13 @@ object ImplicitsIntro extends App {
 //  }
 //  implicit def fromStringToA(str: String): A = new A
 
-  // implicit parameters
+  /**
+    * implicit parameters
+    */
+
   def increment(x: Int)(implicit amount: Int) = x + amount
   implicit val defaultAmount = 10
 
   increment(2)
   // NOT default args
-
 }
