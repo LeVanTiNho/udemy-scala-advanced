@@ -2,6 +2,7 @@ package lectures.part3concurrency
 
 import java.util.concurrent.Executors
 
+// 1
 /*
   We will focus on the manipulation and communication of threads in JVM
   The JVM threads can run in parallel
@@ -11,18 +12,23 @@ object Intro extends App {
   /**
     * Basics about JVM Threads and Threads
     */
+
   /*
     interface Runnable {
       public void run()
     }
    */
-  // JVM threads
+
+  /**
+    * JVM threads vs In-code threads
+    */
   val runnable = new Runnable {
     override def run(): Unit = println("Running in parallel")
   }
   val aThread = new Thread(runnable)
 
   aThread.start() // gives the  signal to the JVM to start a JVM thread
+
   /*
   In-code threads vs JVM Threads,
   JVM threads will execute the code in run method
@@ -33,13 +39,16 @@ object Intro extends App {
 
   aThread.join() // blocks until aThread finishes running
 
+  // Runnable trait has only one abstract method
   val threadHello = new Thread(() => (1 to 5).foreach(_ => println("hello")))
   val threadGoodbye = new Thread(() => (1 to 5).foreach(_ => println("goodbye")))
   //  threadHello.start()
   //  threadGoodbye.start()
   // different runs produce different results!
 
-  // executors
+  /**
+    * Executors
+    */
   // The starting and killing a thread cost a lot, so JVM allows reuse threads
   val pool = Executors.newFixedThreadPool(10)
     pool.execute(() => println("something in the thread pool"))
