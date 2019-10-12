@@ -1,5 +1,7 @@
 package lectures.part4implicits
 
+// Lesson: 3
+
 /**
   * What is type classes?
   * A type class is a trait, that ticks a type and describes what operations can be applied to this type

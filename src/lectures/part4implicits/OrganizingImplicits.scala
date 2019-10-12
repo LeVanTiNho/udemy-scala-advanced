@@ -21,10 +21,6 @@ object OrganizingImplicits extends App {
       - accessor methods = defs with no parentheses
    */
 
-  /**
-    * Here
-    */
-
   // Exercise
   case class Person(name: String, age: Int)
 
@@ -34,15 +30,16 @@ object OrganizingImplicits extends App {
     Person("John", 66)
   )
 
-/*  object Person {
+  object Person {
     implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
   }
 
-  implicit val ageOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.age < b.age)
-  println(persons.sorted)*/
+  // Bad design: Putting the implicit argument in local scope
+  // implicit val ageOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.age < b.age)
+  println(persons.sorted)
 
   /**
-    Implicit scope
+    Implicit scope with priority
     - normal scope = LOCAL SCOPE
     - imported scope
     - companions of all types involved in the method signature
@@ -51,10 +48,11 @@ object OrganizingImplicits extends App {
       - List
       - Ordering
       - all the types involved = A or any supertype
-   */
+    */
 
   /**
-    * Best practise
+    * Best practise:
+    * Implicits for implicit paras should be put in different objects, when needing, we im
     */
 
   object AlphabeticNameOrdering {
@@ -70,12 +68,11 @@ object OrganizingImplicits extends App {
 
   /*
     Exercise.
-
     - totalPrice = most used (50%)
     - by unit count = 25%
     - by unit price = 25%
-
    */
+
   case class Purchase(nUnits: Int, unitPrice: Double)
   object Purchase {
     // The most used implicit will be putted in the companion, the others will putted in another object, when need we import them
