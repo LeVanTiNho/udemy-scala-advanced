@@ -1,6 +1,6 @@
 package lectures.part4implicits
 
-// Lesson: 3
+// Lesson: 3, 5
 
 /**
   * What is type classes?
@@ -11,8 +11,10 @@ object TypeClasses extends App {
   /**
     * Part 1: Type class
     */
+
+
   /**
-    * We want to define classes, its instances can be serialized to HTML
+    * Scenario: We want to define classes, its instances can be serialized to HTML
     */
 
   // Option 1: trait (interface)
@@ -25,6 +27,7 @@ object TypeClasses extends App {
   }
 
   User("John", 32, "john@rockthejvm.com").toHtml
+
   /*
     1 - for the types WE write
     2 - ONE implementation out of quite a number
@@ -70,7 +73,9 @@ object TypeClasses extends App {
     override def serialize(user: User): String = s"<div>${user.name} </div>"
   }
 
-  // Type class template
+  /**
+    * Type class template
+    */
   trait MyTypeClassTemplate[T] {
     def action(value: T): Any
   }
@@ -137,7 +142,6 @@ object TypeClasses extends App {
   /**
     * Part 3
     */
-
   /*
   The HTMLEnrichment class is a wrapper of an generic type
    */
@@ -181,4 +185,3 @@ object TypeClasses extends App {
 
 
 }
-

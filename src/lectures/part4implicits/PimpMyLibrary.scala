@@ -1,5 +1,7 @@
 package lectures.part4implicits
 
+// Lesson 4
+
 /**
   * Use implicits to pimp a library
   */
