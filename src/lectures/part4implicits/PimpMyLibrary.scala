@@ -48,13 +48,14 @@ object PimpMyLibrary extends App {
   // type enrichment = pimping
   // type enrichment: Add more behaviors or properties to a type
 
+  // to method of the EnrichInt final class
   1 to 10
 
   import scala.concurrent.duration._
   3.seconds
 
   // compiler doesn't do multiple implicit searches.
-  //  42.isOdd
+  // 42.isOdd
 
   /*
   Exercises:
