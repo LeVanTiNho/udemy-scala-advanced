@@ -8,9 +8,8 @@ package lectures.part4implicits
 object PimpMyLibrary extends App {
 
   /**
-    * Implicit classes
-    * Implicit conversions (like implicit method/functions)
-    * Wrapper as implicit classes
+    * Implicit classes, implicit wrapper, implicit conversion classes
+    * Implicit methods, functions
     */
 
   implicit class RichInt(val value: Int) extends AnyVal {

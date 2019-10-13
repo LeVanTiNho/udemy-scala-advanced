@@ -143,7 +143,7 @@ object TypeClasses extends App {
     * Part 3
     */
   /*
-  The HTMLEnrichment class is a wrapper of an generic type
+  The HTMLEnrichment class is a conversion class (wrapper) of an generic type
    */
   implicit class HTMLEnrichment[T](value: T) {
     def toHTML(implicit serializer: HTMLSerializer[T]): String = serializer.serialize(value)
@@ -152,8 +152,8 @@ object TypeClasses extends App {
   println(john.toHtml)  // println(new HTMLEnrichment[User](john).toHTML(UserSerializer))
   // COOL!
   /*
-    - extend to new types
-    - choose implementation
+    - extend to new types (by implicit wrapper)
+    - choose implementation (by inject implicitly or explicitly)
     - super expressive!
    */
 
@@ -161,6 +161,7 @@ object TypeClasses extends App {
   println(john.toHTML(PartialUserSerializer))
 
   /*
+  The elements of type enrichment:
     - type class itself --- HTMLSerializer[T] { .. }
     - type class instances (some of which are implicit) --- UserSerializer, IntSerializer
     - conversion with implicit classes --- HTMLEnrichment
@@ -168,20 +169,25 @@ object TypeClasses extends App {
 
   // context bounds
   def htmlBoilerplate[T](content: T)(implicit serializer: HTMLSerializer[T]): String =
-    s"<html><body> ${content.toHTML(serializer)}</body></html>"
+    s"<html><body> ${content.toHTML}</body></html>"
 
-  def htmlSugar[T : HTMLSerializer](content: T): String = {
+  // Tell the compiler to inject type class instances of T
+  def htmlSugar[T : HTMLSerializer /*context bounds*/] (content: T): String = {
+
+    s"<html><body> ${content.toHTML}</body></html>"
+
+   /*
+    // We can use implicitly method
     val serializer = implicitly[HTMLSerializer[T]]
-    // use serializer
     s"<html><body> ${content.toHTML(serializer)}</body></html>"
+    */
   }
 
-  // implicitly
+  // implicitly method
   case class Permissions(mask: String)
   implicit val defaultPermissions: Permissions = Permissions("0744")
 
   // in some other part of the  code
+  // implicitly method return a Permissions value by looking around for a suitable implicit
   val standardPerms = implicitly[Permissions]
-
-
 }
