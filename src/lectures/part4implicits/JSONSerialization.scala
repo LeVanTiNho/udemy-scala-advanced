@@ -4,9 +4,8 @@ import java.util.Date
 
 import lectures.part4implicits.JSONSerialization.JSONNumber
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 6
+
 object JSONSerialization extends App {
 
   /*
@@ -24,7 +23,8 @@ object JSONSerialization extends App {
     3 - serialize to JSON
    */
 
-  sealed trait JSONValue { // intermediate data type
+  // 1 - intermediate data types
+  sealed trait JSONValue {
     def stringify: String
   }
 
@@ -70,20 +70,20 @@ object JSONSerialization extends App {
 
   println(data.stringify)
 
-  // type class
+  // 2 - type class
   /*
     1 - type class
     2 - type class instances (implicit)
     3 - pimp library to use type class instances
    */
 
-  // 2.1
+  // 2.1 - type class
   trait JSONConverter[T] {
     def convert(value: T): JSONValue
   }
 
-  // 2.3 conversion
-
+  // 2.3 conversion (use implicit wrapping class)
+  // Ops == Rich == Enrichment
   implicit class JSONOps[T](value: T) {
     def toJSON(implicit converter: JSONConverter[T]): JSONValue =
       converter.convert(value)

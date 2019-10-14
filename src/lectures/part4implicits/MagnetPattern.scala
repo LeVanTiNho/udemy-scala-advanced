@@ -3,9 +3,8 @@ package lectures.part4implicits
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 6
+
 object MagnetPattern extends App {
 
   // method overloading
