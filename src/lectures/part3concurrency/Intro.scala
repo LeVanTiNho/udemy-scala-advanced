@@ -50,20 +50,21 @@ object Intro extends App {
     * Executors
     */
   // The starting and killing a thread cost a lot, so JVM allows reuse threads
-  val pool = Executors.newFixedThreadPool(10)
-    pool.execute(() => println("something in the thread pool"))
 
-    pool.execute(() => {
-      //Thread.sleep(1000)
-      println("done after 1 second")
-    })
+  val pool = Executors.newFixedThreadPool(10) // return a ExecutorService (is a implementation of Executor)
+  pool.execute(() => println("something in the thread pool"))
 
-    pool.execute(() => {
-      //Thread.sleep(1000)
-      println("almost done")
-      //Thread.sleep(1000)
-      println("done after 2 seconds")
-    })
+  pool.execute(() => {
+    //Thread.sleep(1000)
+    println("done after 1 second")
+  })
+
+  pool.execute(() => {
+    //Thread.sleep(1000)
+    println("almost done")
+    //Thread.sleep(1000)
+    println("done after 2 seconds")
+  })
 
   pool.shutdown()
   // No more actions are submitted, but wait for the actions previously submitted is executed and terminates
@@ -108,26 +109,26 @@ object Intro extends App {
     account.amount -= price // account.amount = account.amount - price
     println("I've bought " + thing)
     println("my account is now " + account)
-    }
+  }
 
-    for (_ <- 1 to 10000) {
-      val account = new BankAccount(50000)
-      val thread1 = new Thread(() => buy(account, "shoes", 3000))
-      val thread2 = new Thread(() => buy(account, "iPhone12", 4000))
+  for (_ <- 1 to 10000) {
+    val account = new BankAccount(50000)
+    val thread1 = new Thread(() => buy(account, "shoes", 3000))
+    val thread2 = new Thread(() => buy(account, "iPhone12", 4000))
 
-      thread1.start()
-      thread2.start()
-      Thread.sleep(10)
-      if (account.amount != 43000) println("AHA: " + account.amount)
-      println()
-    }
+    thread1.start()
+    thread2.start()
+    Thread.sleep(10)
+    if (account.amount != 43000) println("AHA: " + account.amount)
+    println()
+  }
 
     /*
     thread1 (shoes): 50000
       - account = 50000 - 3000 = 47000
     thread2 (iphone): 50000
-      - account = 50000 - 4000 = 46000 overwrites the memory of account.amount
-    */
+  - account = 50000 - 4000 = 46000 overwrites the memory of account.amount
+  */
 
   // option #1: use synchronized()
   def buySafe(account: BankAccount, thing: String, price: Int) =
@@ -140,7 +141,11 @@ object Intro extends App {
 
   // option #2: use @volatile
 
-  /*
+  /**
+    * here
+    */
+
+  /**
     * Exercises
     *
     * 1) Construct 50 "inception" threads
