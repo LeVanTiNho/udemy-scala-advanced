@@ -33,6 +33,7 @@ object MagnetPattern extends App {
   /*
     1 - type erasure
 
+    What? When? How?
 
     2 - lifting doesn't work for all overloads
 
