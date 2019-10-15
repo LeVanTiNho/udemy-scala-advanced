@@ -3,9 +3,14 @@ package lectures.part4implicits
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-// Lesson 6
+// Lesson 7
 
 object MagnetPattern extends App {
+
+  /**
+    * What is Magnet Pattern?
+    * Magnet pattern is a use case of type class pattern, which solves problems created by method overloading
+    */
 
   // method overloading
 
@@ -21,12 +26,14 @@ object MagnetPattern extends App {
     def receive[T : Serializer](message: T): Int
     def receive[T : Serializer](message: T, statusCode: Int): Int
     def receive(future: Future[P2PRequest]): Int
-    //    def receive(future: Future[P2PResponse]): Int
+    // def receive(future: Future[P2PResponse]): Int
     // lots of overloads
   }
 
   /*
     1 - type erasure
+
+
     2 - lifting doesn't work for all overloads
 
       val receiveFV = receive _ // ?!
@@ -37,8 +44,8 @@ object MagnetPattern extends App {
       actor.receive(?!)
    */
 
-  trait MessageMagnet[Result] {
-    def apply(): Result
+  trait MessageMagnet[ResultType] {
+    def apply(): ResultType
   }
 
   def receive[R](magnet: MessageMagnet[R]): R = magnet()
