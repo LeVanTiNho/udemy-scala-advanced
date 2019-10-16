@@ -31,16 +31,14 @@ object MagnetPattern extends App {
   }
 
   /*
-    1 - type erasure
-
-    What? When? How?
+    1 - type erasure - The generic types are erased at compile time
 
     2 - lifting doesn't work for all overloads
 
       val receiveFV = receive _ // ?!
 
     3 - code duplication
-    4 - type inferrence and default args
+    4 - type inference and default args
 
       actor.receive(?!)
    */
@@ -49,6 +47,7 @@ object MagnetPattern extends App {
     def apply(): ResultType
   }
 
+  // The center of gravity
   def receive[R](magnet: MessageMagnet[R]): R = magnet()
 
   implicit class FromP2PRequest(request: P2PRequest) extends MessageMagnet[Int] {
@@ -67,6 +66,11 @@ object MagnetPattern extends App {
     }
   }
 
+  /*
+  What the compiler does here?
+  - The the compiler notices that the P2PRequest isn't a MessageMagnet
+  - But it doesn't give up, it searches for the suitable implicit conversion, which must extend MessageMagnet
+   */
   receive(new P2PRequest)
   receive(new P2PResponse)
 
@@ -79,8 +83,8 @@ object MagnetPattern extends App {
     override def apply(): Int = 3
   }
 
-  println(receive(Future(new P2PRequest)))
-  println(receive(Future(new P2PResponse)))
+  receive(Future(new P2PRequest)) // receive(new FromResponseFuture(new Future[P2PRequest]))
+  receive(Future(new P2PResponse)) // receive(new FromRequestFuture(new Future[P2PRequest]))
 
   // 2 - lifting works
   trait MathLib {
@@ -104,7 +108,8 @@ object MagnetPattern extends App {
     override def apply(): Int = s.toInt + 1
   }
 
-  val addFV = add1 _
+  // Notice: The add1 method must have the concrete return type
+  val addFV = add1 _ // add1 is lifted into Function1[para: AddMagnet, return: Int]
   println(addFV(1))
   println(addFV("3"))
 
@@ -121,9 +126,15 @@ object MagnetPattern extends App {
    */
 
   class Handler {
+
+    // Recall: call-by-name parameter can receive a executable thing, like expression, function
     def handle(s: => String) = {
       println(s)
       println(s)
+    }
+
+    def handle(intNumber: Int) = {
+      println(intNumber)
     }
     // other overloads
   }
@@ -146,10 +157,11 @@ object MagnetPattern extends App {
     "hahaha"
   }
 
-  //  handle(sideEffectMethod())
+  // handle(sideEffectMethod()) // execute normally
+
   handle {
     println("Hello, Scala")
-    new StringHandle("magnet")
+    "magnet"
   }
   // careful!
 }
