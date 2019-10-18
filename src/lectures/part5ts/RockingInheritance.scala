@@ -1,11 +1,15 @@
 package lectures.part5ts
 
+// Lesson 1
+
 /**
-  * Created by Daniel.
+  * In this lesson, we learn about some advanced points in Scala Inheritance
   */
 object RockingInheritance extends App {
 
-  // convenience
+  /**
+    * convenience
+    */
   trait Writer[T] {
     def write(value: T): Unit
   }
@@ -22,8 +26,9 @@ object RockingInheritance extends App {
     stream.close(0)
   }
 
-  // diamond problem
-
+  /**
+    * diamond problem
+    */
   trait Animal { def name: String }
   trait Lion extends Animal { override def name: String = "lion" }
   trait Tiger extends Animal { override def name: String = "tiger" }
@@ -40,7 +45,9 @@ object RockingInheritance extends App {
     LAST OVERRIDE GETS PICKED
    */
 
-  // the super problem + type linearization
+  /**
+    * type linearization and super keyword problem
+    */
 
   trait Cold {
     def print = println("cold")
@@ -74,4 +81,25 @@ object RockingInheritance extends App {
   val color = new White
   color.print
 
+  /*
+  Explain:
+  - The meaning of "with" -> "overridden by"
+
+  - Cold = AnyRef with Cold
+  - Green = AnyRef with Cold with Green
+  - Blue = AnyRef with Cold with Blue
+  - Red = AnyRef with Red
+
+  - White = AnyRef with Red with AnyRef with Cold with Green with AnyRef with Cold with Blue with White
+
+  - Rule:
+    + AnyRef with Red -> remaining, because Red is subtype of AnyRef
+    + Red with AnyRef -> throw away AnyRef (the compiler does that)
+    + Red with Cold -> remaining, because Red and Cold isn't related
+
+  - White = AnyRef with Red with Cold with Green with Blue with White
+
+  - super is Blue -> Green -> Cold
+  - The print method of Red and the print method of Red isn't related
+   */
 }

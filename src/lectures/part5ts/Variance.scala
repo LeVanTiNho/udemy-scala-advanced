@@ -1,8 +1,7 @@
 package lectures.part5ts
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 2
+
 object Variance extends App {
 
   trait Animal
