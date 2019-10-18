@@ -1,17 +1,25 @@
 package lectures.part4implicits
 
 import java.{util => ju}
-/**
-  * Created by Daniel.
-  */
+
+// Lesson 8
+
 object ScalaJavaConversions extends App {
 
+  // JavaConverters has converters to convert collections in Java to Scala and vice versa
   import collection.JavaConverters._
 
   val javaSet: ju.Set[Int] = new ju.HashSet[Int]()
   (1 to 5).foreach(javaSet.add)
   println(javaSet)
 
+  /*
+  The steps Scala compiler does:
+  1. The compiler notices that the Java Set doesn't has asScala method
+  2. The compiler will search for an implicit wrapper class of a Java Set has the asScala method, but it won't find out
+  3. The Compiler will search for an implicit conversion method of a Java Set, it will find out the asScalaConverter method,
+  it is aware that method converts a Java Set to an AsScala, and the AsScala wrapper class has asScala method
+   */
   val scalaSet = javaSet.asScala
 
   /*
@@ -20,28 +28,33 @@ object ScalaJavaConversions extends App {
     ju.List - collection.mutable.Buffer
     ju.Set - collection.mutable.Set
     ju.Map - collection.mutable.Map
-
    */
 
+
   import collection.mutable._
-  val numbersBuffer = ArrayBuffer[Int](1, 2, 3)
-  val juNumbersBuffer = numbersBuffer.asJava
+  // ArrayBuffer is a Buffer
+  val scalaBuffer = ArrayBuffer[Int](1, 2, 3)
+  val javaList = scalaBuffer.asJava
 
-  println(juNumbersBuffer.asScala eq numbersBuffer)
+  println(javaList.asScala eq scalaBuffer)
 
-  val numbers = List(1,2,3)
-  val juNumbers = numbers.asJava
-  val backToScala = juNumbers.asScala
-  println(backToScala eq numbers) // false
-  println(backToScala == numbers) // true
 
-  //  juNumbers.add(7)
+  val scalaIterable = List(1,2,3) // immutable.List
+  val javaIterable = scalaIterable.asJava
+  val backToScala = javaIterable.asScala
+  println(backToScala eq scalaIterable) // false
+  println(backToScala == scalaIterable) // true
+  // The series of conversions from scala to java back to scala may not remain the same object
+
+  // scalaIterable is a immutable collection, when it's converted to javaIterable is still immutable
+  // javaIterable.add(7)
 
   /*
     Exercise
     create a Scala-Java Optional-Option
       .asScala
    */
+
   class ToScala[T](value: => T) {
     def asScala: T = value
   }
@@ -50,8 +63,7 @@ object ScalaJavaConversions extends App {
     if (o.isPresent) Some(o.get) else None
   )
 
-  val juOptional: ju.Optional[Int] = ju.Optional.of(2)
-  val scalaOption = juOptional.asScala
+  val javaOptional: ju.Optional[Int] = ju.Optional.empty()
+  val scalaOption = javaOptional.asScala
   println(scalaOption)
-
 }

@@ -163,5 +163,10 @@ object MagnetPattern extends App {
     println("Hello, Scala")
     "magnet"
   }
+  /*
+  Explaination:
+  - the sideEffectMethod is lifted to a function and that function is passed to StringHandle constructor
+  - the expression is executed, "magnet" string value is return, that string is passed to StringHandle constructor
+   */
   // careful!
 }
