@@ -13,6 +13,8 @@ object Variance extends App {
   // "inheritance" - type substitution of generics
 
   class Cage[T]
+
+  // Cat extends Animal, the question is if Cage[Cat] extend Cage[Animal]?
   // yes - covariance
   class CCage[+T]
   val ccage: CCage[Animal] = new CCage[Cat]
@@ -31,10 +33,13 @@ object Variance extends App {
   // covariant positions
   class CovariantCage[+T](val animal: T) // COVARIANT POSITION
 
-  //  class ContravariantCage[-T](val animal: T)
+  class ContravariantCage[-T](val animal: T)
+  
   /*
     val catCage: XCage[Cat] = new XCage[Animal](new Crocodile)
    */
+
+  /*
 
   //  class CovariantVariableCage[+T](var animal: T) // types of vars are in CONTRAVARIANT POSITION
   /*
@@ -161,4 +166,6 @@ object Variance extends App {
   }
 
   // flatMap
+
+  */
 }
