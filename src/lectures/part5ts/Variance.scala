@@ -9,45 +9,67 @@ object Variance extends App {
   class Cat extends Animal
   class Crocodile extends Animal
 
-  // what is variance?
-  // "inheritance" - type substitution of generics
+  /**
+    * what is variance?
+    * "inheritance" - type substitution of generics
+    */
 
   class Cage[T]
 
-  // Cat extends Animal, the question is if Cage[Cat] extend Cage[Animal]?
-  // yes - covariance
+  // Cat extends Animal, the question is if Cage[Cat] extend Cage[Animal] or vice versa?
+
+  /*
+  Yes-covariance
+  Only 2 below cases is covariance:
+   */
   class CCage[+T]
-  val ccage: CCage[Animal] = new CCage[Cat]
+  val ccage1: CCage[Animal] = new CCage[Cat]
+  val ccage2: CCage[Animal] = new CCage[Animal]
+  // val ccage3: CCage[Cat] = new CCage[Animal] -> not covariance
 
-  // no - invariance
+  /*
+  No - invariance
+  Only 1 below case:
+   */
   class ICage[T]
-  //  val icage: ICage[Animal] = new ICage[Cat]
-  //  val x: Int = "hello"
+  val icage: ICage[Cat] = new ICage[Cat]
+  // val icage: ICage[Animal] = new ICage[Cat] -> covariance, not invariance
+  // val icage: ICage[Cat] = new ICage[Animal] -> contravariance, not invariance
 
-  // hell no - opposite = contravariance
+  /*
+  No - opposite = contra-variance
+   */
   class XCage[-T]
-  val xcage: XCage[Cat] = new XCage[Animal]
+  // Only 2 below cases is contra-variance
+  val xcage1: XCage[Cat] = new XCage[Animal]
+  val xcage2: XCage[Cat] = new XCage[Cat]
 
+  /**
+    * Variant position, invariant position
+    */
   class InvariantCage[T](val animal: T) // invariant
 
   // covariant positions
-  class CovariantCage[+T](val animal: T) // COVARIANT POSITION
+  class CovariantCage[+T](val animal: T)
+  // COVARIANT POSITION, the animal para is at covariant position
+  // Covariant means CovariantCage[Animal](val animal: Animal), animal can be Dog, Cat, Crocodile
 
   class ContravariantCage[-T](val animal: T)
-  
+  // the animal para is at covariant position
+
   /*
     val catCage: XCage[Cat] = new XCage[Animal](new Crocodile)
    */
 
-  /*
 
-  //  class CovariantVariableCage[+T](var animal: T) // types of vars are in CONTRAVARIANT POSITION
+  class CovariantVariableCage[+T](var animal: T)
+  // types of vars are in CONTRAVARIANT POSITION, see the example:
   /*
     val ccage: CCage[Animal] = new CCage[Cat](new Cat)
     ccage.animal = new Crocodile
    */
 
-  //  class ContravariantVariableCage[-T](var animal: T) // also in COVARIANT POSITION
+  class ContravariantVariableCage[-T](var animal: T) // also in COVARIANT POSITION
   /*
     val catCage: XCage[Cat] = new XCage[Animal](new Crocodile)
    */
