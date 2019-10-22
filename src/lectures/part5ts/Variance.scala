@@ -49,48 +49,68 @@ object Variance extends App {
     */
   class InvariantCage[T](val animal: T) // invariant
 
-  // covariant positions
+  /**
+    * covariant positions
+    */
+
   class CovariantCage[+T](val animal: T)
   // COVARIANT POSITION, the animal para is at covariant position
   // Covariant means CovariantCage[Animal](val animal: Animal), animal can be Dog, Cat, Crocodile
 
-  class ContravariantCage[-T](val animal: T)
+  // class ContravariantCage[-T](val animal: T)
   // the animal para is at covariant position
-
   /*
     val catCage: XCage[Cat] = new XCage[Animal](new Crocodile)
    */
 
+  /**
+    * Contravariance
+    */
 
-  class CovariantVariableCage[+T](var animal: T)
-  // types of vars are in CONTRAVARIANT POSITION, see the example:
+  // class CovariantVariableCage[+T](var animal: T)
+  // types of vars are in CONTRAVARIANT POSITION
   /*
-    val ccage: CCage[Animal] = new CCage[Cat](new Cat)
-    ccage.animal = new Crocodile
+    val ccage: CCage[Animal] = new CCage[Cat](new Cat) -> Ok, no problem!
+    ccage.animal = new Crocodile -> That is problem
    */
 
-  class ContravariantVariableCage[-T](var animal: T) // also in COVARIANT POSITION
+  /**
+    * Covariance
+    */
+  // class ContravariantVariableCage[-T](var animal: T) // also in COVARIANT POSITION
   /*
-    val catCage: XCage[Cat] = new XCage[Animal](new Crocodile)
+    val catCage: XCage[Cat] = new XCage[Animal](new Animal) -> ok, no problem!
+    catCage.animal = new Crocodile -> that is problem
    */
+
+  /**
+    * Because var can be covariant or contravariant, so var is used in invariant case
+    */
   class InvariantVariableCage[T](var animal: T) // ok
 
-  //  trait AnotherCovariantCage[+T] {
-  //    def addAnimal(animal: T) // CONTRAVARIANT POSITION
-  //  }
+  /**
+    * Generic type paras is CONTRAVARIANT POSITION
+    */
+  trait AnotherCovariantCage[+T] {
+    // def addAnimal(animal: T)
+  }
   /*
     val ccage: CCage[Animal] = new CCage[Dog]
-    ccage.add(new Cat)
+
+    Because T is Animal, we can:
+      ccage.add(new Cat) -> that is problem!
    */
 
   class AnotherContravariantCage[-T] {
     def addAnimal(animal: T) = true
   }
+
   val acc: AnotherContravariantCage[Cat] = new AnotherContravariantCage[Animal]
   acc.addAnimal(new Cat)
   class Kitty extends Cat
   acc.addAnimal(new Kitty)
 
+  /*
   class MyList[+A] {
     def add[B >: A](element: B): MyList[B] = new MyList[B] // widening the type
   }
