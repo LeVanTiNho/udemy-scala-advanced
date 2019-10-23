@@ -11,77 +11,79 @@ object Variance extends App {
 
   /**
     * what is variance?
-    * "inheritance" - type substitution of generics
+    * Why we need variance?
+    * "inheritance" - type substitution of generic types
     */
 
   class Cage[T]
 
-  // Cat extends Animal, the question is if Cage[Cat] extend Cage[Animal] or vice versa?
+  // Cat extends Animal, the question is if Cage[Cat] can extend Cage[Animal] or vice versa?
 
-  /*
-  Yes-covariance
-  Only 2 below cases is covariance:
-   */
+  /**
+    * Covariance, contra-variance, invariance
+    */
+
+  /**
+    * covariance
+    */
+
+  // Only 2 below cases is covariance:
   class CCage[+T]
   val ccage1: CCage[Animal] = new CCage[Cat]
   val ccage2: CCage[Animal] = new CCage[Animal]
-  // val ccage3: CCage[Cat] = new CCage[Animal] -> not covariance
 
-  /*
-  No - invariance
-  Only 1 below case:
-   */
+  /**
+    * Invariance
+    */
+  // Only 1 below case:
   class ICage[T]
   val icage: ICage[Cat] = new ICage[Cat]
-  // val icage: ICage[Animal] = new ICage[Cat] -> covariance, not invariance
-  // val icage: ICage[Cat] = new ICage[Animal] -> contravariance, not invariance
 
-  /*
-  No - opposite = contra-variance
-   */
+  /**
+    * Contra-variance
+    */
   class XCage[-T]
   // Only 2 below cases is contra-variance
   val xcage1: XCage[Cat] = new XCage[Animal]
   val xcage2: XCage[Cat] = new XCage[Cat]
 
   /**
-    * Variant position, invariant position
+    * Variant position, Contra-variant position
     */
   class InvariantCage[T](val animal: T) // invariant
 
   /**
-    * covariant positions
+    * value class constructor parameters is in covariant position
     */
 
   class CovariantCage[+T](val animal: T)
   // COVARIANT POSITION, the animal para is at covariant position
   // Covariant means CovariantCage[Animal](val animal: Animal), animal can be Dog, Cat, Crocodile
 
-  // class ContravariantCage[-T](val animal: T)
+  class SmallCat extends Cat
+  val covariantCage1: CovariantCage[Animal] = new CovariantCage[Cat](new Cat)
+  val covariantCage2: CovariantCage[Animal] = new CovariantCage[Cat](new SmallCat) // that's covariance
+
+  /*
+  class ContravariantCage[-T](val animal: T)
   // the animal para is at covariant position
-  /*
-    val catCage: XCage[Cat] = new XCage[Animal](new Crocodile)
-   */
+  val contravariantCage: ContravariantCage[Cat] = new ContravariantCage[Animal](new Dog) // that's the problem
+  */
 
   /**
-    * Contravariance
+    * Variable class constructor parameters
     */
 
-  // class CovariantVariableCage[+T](var animal: T)
-  // types of vars are in CONTRAVARIANT POSITION
   /*
-    val ccage: CCage[Animal] = new CCage[Cat](new Cat) -> Ok, no problem!
-    ccage.animal = new Crocodile -> That is problem
-   */
+  class CovariantVariableCage[+T](var animal: T) // types of vars are in CONTRAVARIANT POSITION
+  val covariantVariableCage: CovariantVariableCage[Animal] = new CovariantVariableCage[Cat](new Cat)
+  covariantVariableCage.animal = new Crocodile // -> that's the problem!
+  */
 
-  /**
-    * Covariance
-    */
-  // class ContravariantVariableCage[-T](var animal: T) // also in COVARIANT POSITION
   /*
-    val catCage: XCage[Cat] = new XCage[Animal](new Animal) -> ok, no problem!
-    catCage.animal = new Crocodile -> that is problem
-   */
+  class ContravariantVariableCage[-T](var animal: T) // also in COVARIANT POSITION
+  val contravariantVariableCage: ContravariantVariableCage[Cat] = new ContravariantVariableCage[Animal](new Dog) // that's the problem!
+  */
 
   /**
     * Because var can be covariant or contravariant, so var is used in invariant case
@@ -89,56 +91,80 @@ object Variance extends App {
   class InvariantVariableCage[T](var animal: T) // ok
 
   /**
-    * Generic type paras is CONTRAVARIANT POSITION
+    * METHOD ARGUMENTS ARE IN CONTRAVARIANT POSITION.
     */
-  trait AnotherCovariantCage[+T] {
-    // def addAnimal(animal: T)
-  }
-  /*
-    val ccage: CCage[Animal] = new CCage[Dog]
 
-    Because T is Animal, we can:
-      ccage.add(new Cat) -> that is problem!
-   */
+  /*
+  class AnotherCovariantCage[+T] {
+    def addAnimal(animal: T): Boolean = true
+  }
+
+  val anotherCovariantCage: AnotherCovariantCage[Animal] = new AnotherCovariantCage[Cat]
+  // Because now, T is Animal, so we can:
+  anotherCovariantCage.addAnimal(new Dog) // -> that's the problem!
+  */
 
   class AnotherContravariantCage[-T] {
     def addAnimal(animal: T) = true
   }
-
-  val acc: AnotherContravariantCage[Cat] = new AnotherContravariantCage[Animal]
-  acc.addAnimal(new Cat)
+  val anotherContravariantCage: AnotherContravariantCage[Cat] = new AnotherContravariantCage[Animal]
+  // Because now, T is Animal, so we can not:
+  // anotherContravariantCage.addAnimal(new Dog) // -> the compiler shouts out at us, here.
+  anotherContravariantCage.addAnimal(new Cat) // -> ok
   class Kitty extends Cat
-  acc.addAnimal(new Kitty)
+  anotherContravariantCage.addAnimal(new Kitty)
 
-  /*
+  /**
+    * Fix the above problem
+    * Widening the type
+    */
   class MyList[+A] {
-    def add[B >: A](element: B): MyList[B] = new MyList[B] // widening the type
+    def add[B >: A](element: B): MyList[B] = new MyList[B]
   }
 
-  val emptyList = new MyList[Kitty]
-  val animals = emptyList.add(new Kitty)
-  val moreAnimals = animals.add(new Cat)
-  val evenMoreAnimals = moreAnimals.add(new Dog)
+  val myList1 = new MyList[Kitty]
+  val myList2 = myList1.add(new Kitty) // A is Kitty
+  val myList3 = myList2.add(new Cat) // A is Cat -> return a MyList[Cat]
+  val myList4 = myList3.add(new Dog) // A is Animal -> return a MyList[Animal]
 
-  // METHOD ARGUMENTS ARE IN CONTRAVARIANT POSITION.
+  val myList5: MyList[Animal] = new MyList[Kitty] // A is covariant -> ok, A is Animal
+  val myList6 = myList5.add(new Cat) // A and B is Animal
+  val myList7 = myList6.add(new Dog) // A and B is Animal
 
-  // return types
+
+  class AnotherMyList[A] {
+    def add[A](element: A): MyList[A] = new MyList[A]
+  }
+
+  val anotherMyList1 = new AnotherMyList[Kitty]
+  val anotherMyList2 = anotherMyList1.add(new Cat)
+  val anotherMyList3 = anotherMyList2.add(new Dog)
+
+  /*
+  /**
+    * METHOD RETURN TYPES ARE IN COVARIANT POSITION
+    */
   class PetShop[-T] {
-    //    def get(isItaPuppy: Boolean): T // METHOD RETURN TYPES ARE IN COVARIANT POSITION
+
     /*
-      val catShop = new PetShop[Animal] {
-        def get(isItaPuppy: Boolean): Animal = new Cat
-      }
+    def get(isItaPuppy: Boolean): T
 
-      val dogShop: PetShop[Dog] = catShop
-      dogShop.get(true)   // EVIL CAT!
-     */
+    val animalShop: PetShop[Animal] = new PetShop[Animal]
+      -> def get(isItaPuppy: Boolean): Animal = new Cat
 
+
+    val dogShop: PetShop[Dog] = animalShop
+    dogShop.get(true) // EVIL CAT!
+    */
+
+    /**
+      * Fix the above problem
+      */
     def get[S <: T](isItaPuppy: Boolean, defaultAnimal: S): S = defaultAnimal
   }
 
   val shop: PetShop[Dog] = new PetShop[Animal]
-  //  val evilCat = shop.get(true, new Cat)
+  // val evilCat = shop.get(true, new Cat) -> error
   class TerraNova extends Dog
   val bigFurry = shop.get(true, new TerraNova)
 
@@ -147,6 +173,7 @@ object Variance extends App {
     - method arguments are in CONTRAVARIANT position
     - return types are in COVARIANT position
    */
+
 
   /**
     * 1. Invariant, covariant, contravariant
@@ -209,5 +236,5 @@ object Variance extends App {
 
   // flatMap
 
-  */
+ */
 }
