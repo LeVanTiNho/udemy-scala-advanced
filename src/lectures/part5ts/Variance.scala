@@ -140,18 +140,18 @@ object Variance extends App {
   val anotherMyList2 = anotherMyList1.add(new Cat)
   val anotherMyList3 = anotherMyList2.add(new Dog)
 
-  /*
   /**
     * METHOD RETURN TYPES ARE IN COVARIANT POSITION
     */
+
   class PetShop[-T] {
 
     /*
     def get(isItaPuppy: Boolean): T
 
-    val animalShop: PetShop[Animal] = new PetShop[Animal]
-      -> def get(isItaPuppy: Boolean): Animal = new Cat
-
+    val animalShop = new PetShop[Animal] {
+      def get(isItaPuppy: Boolean): Animal = new Cat
+    }
 
     val dogShop: PetShop[Dog] = animalShop
     dogShop.get(true) // EVIL CAT!
@@ -163,10 +163,10 @@ object Variance extends App {
     def get[S <: T](isItaPuppy: Boolean, defaultAnimal: S): S = defaultAnimal
   }
 
-  val shop: PetShop[Dog] = new PetShop[Animal]
+  val petShop1: PetShop[Dog] = new PetShop[Animal]
   // val evilCat = shop.get(true, new Cat) -> error
   class TerraNova extends Dog
-  val bigFurry = shop.get(true, new TerraNova)
+  val petShop2 = petShop1.get(true, new TerraNova)
 
   /*
     Big rule
@@ -174,7 +174,7 @@ object Variance extends App {
     - return types are in COVARIANT position
    */
 
-
+/*
   /**
     * 1. Invariant, covariant, contravariant
     *   Parking[T](things: List[T]) {
