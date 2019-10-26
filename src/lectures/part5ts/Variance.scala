@@ -174,7 +174,6 @@ object Variance extends App {
     - return types are in COVARIANT position
    */
 
-/*
   /**
     * 1. Invariant, covariant, contravariant
     *   Parking[T](things: List[T]) {
@@ -192,11 +191,13 @@ object Variance extends App {
   class Car extends Vehicle
   class IList[T]
 
+  // Exc.1
   class IParking[T](vehicles: List[T]) {
     def park(vehicle: T): IParking[T] = ???
     def impound(vehicles: List[T]): IParking[T] = ???
     def checkVehicles(conditions: String): List[T] = ???
 
+    // Exc.3
     def flatMap[S](f: T => IParking[S]): IParking[S] = ???
   }
 
@@ -205,6 +206,7 @@ object Variance extends App {
     def impound[S >: T](vehicles: List[S]): CParking[S] = ???
     def checkVehicles(conditions: String): List[T] = ???
 
+    // Exc.3
     def flatMap[S](f: T => CParking[S]): CParking[S] = ???
   }
 
@@ -213,7 +215,9 @@ object Variance extends App {
     def impound(vehicles: List[T]): XParking[T] = ???
     def checkVehicles[S <: T](conditions: String): List[S] = ???
 
+    // Exc.3
     def flatMap[R <: T, S](f: Function1[R, XParking[S]]): XParking[S] = ???
+    // def flatMap[S](f: T => CParking[S]): XParking[S] = ???
   }
 
   /*
@@ -222,6 +226,7 @@ object Variance extends App {
     - use contravariance = GROUP OF ACTIONS
    */
 
+  // Exc.2
   class CParking2[+T](vehicles: IList[T]) {
     def park[S >: T](vehicle: S): CParking2[S] = ???
     def impound[S >: T](vehicles: IList[S]): CParking2[S] = ???
@@ -235,6 +240,4 @@ object Variance extends App {
   }
 
   // flatMap
-
- */
 }
