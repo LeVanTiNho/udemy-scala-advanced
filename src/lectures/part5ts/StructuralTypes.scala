@@ -1,16 +1,17 @@
 package lectures.part5ts
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 5
+
 object StructuralTypes extends App {
 
-  // structural types
+  /**
+    * structural types
+    */
 
   type JavaCloseable = java.io.Closeable
 
   class HipsterCloseable {
-    def close(): Unit = println("yeah yeah I'm closing")
+    def close(): Unit = println("[HipsterCloseable] yeah yeah I'm closing")
     def closeSilently(): Unit = println("not making a sound")
   }
 
@@ -23,14 +24,13 @@ object StructuralTypes extends App {
   def closeQuietly(unifiedCloseable: UnifiedCloseable): Unit = unifiedCloseable.close()
 
   closeQuietly(new JavaCloseable {
-    override def close(): Unit = ???
+    override def close(): Unit = println("[JavaCloseable] yeah yeah I'm closing")
   })
   closeQuietly(new HipsterCloseable)
 
-
-
-  // TYPE REFINEMENTS
-
+  /**
+    * TYPE REFINEMENTS
+    */
 
   type AdvancedCloseable = JavaCloseable {
     def closeSilently(): Unit
@@ -44,7 +44,7 @@ object StructuralTypes extends App {
   def closeShh(advCloseable: AdvancedCloseable): Unit = advCloseable.closeSilently()
 
   closeShh(new AdvancedJavaCloseable)
-  // closeShh(new HipsterCloseable)
+  // closeShh(new HipsterCloseable) -> Illegal!
 
   // using structural types as standalone types
   def altClose(closeable: { def close(): Unit }): Unit = closeable.close()
