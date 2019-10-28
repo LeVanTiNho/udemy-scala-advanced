@@ -45,20 +45,25 @@ object SelfTypes extends App {
     override def play(): Unit = println("(guitar solo)")
   }
 
+  // Legal
   val ericClapton = new Guitarist with Singer {
     override def sing(): Unit = ???
   }
 
-  // vs inheritance
+  /**
+    * vs inheritance
+    */
   class A
   class B extends A // B IS AN A
 
   trait T
-  trait S { self: T => } // S REQUIRES a T
+  trait S { self: T => } // S REQUIRES a T, T is part of S
 
-  // CAKE PATTERN => "dependency injection"
+  /**
+    * Self-type = CAKE PATTERN => "dependency injection"
+    */
 
-  // DI
+  // Dependency injection
   class Component {
     // API
   }
@@ -66,7 +71,7 @@ object SelfTypes extends App {
   class ComponentB extends Component
   class DependentComponent(val component: Component)
 
-  // CAKE PATTERN
+  // Cake pattern
   trait ScalaComponent {
     // API
     def action(x: Int): String
@@ -86,8 +91,6 @@ object SelfTypes extends App {
 
   // layer 3 - app
   trait AnalyticsApp extends ScalaApplication with Analytics
-
-
 
   // cyclical dependencies
 
