@@ -1,8 +1,7 @@
 package lectures.part5ts
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 6
+
 object SelfTypes extends App {
 
   // requiring a type to be mixed in
@@ -11,22 +10,33 @@ object SelfTypes extends App {
     def play(): Unit
   }
 
-  trait Singer { this: Instrumentalist => // SELF TYPE whoever implements Singer to implement Instrumentalist
+  trait Singer { this: Instrumentalist => // SELF TYPE force whoever implements Singer to implement Instrumentalist
 
     // rest of the implementation or API
     def sing(): Unit
   }
 
+  // Legal
   class LeadSinger extends Singer with Instrumentalist  {
     override def play(): Unit = ???
     override def sing(): Unit = ???
   }
 
-  //  class Vocalist extends Singer {
-  //    override def sing(): Unit = ???
-  //  }
+  // Illegal!
+  /*
+    class Vocalist extends Singer {
+      override def sing(): Unit = ???
+    }
+   */
 
+  // With Anonymous class
   val jamesHetfield = new Singer with Instrumentalist {
+    override def play(): Unit = ???
+    override def sing(): Unit = ???
+  }
+
+  // Legal
+  val instrumentalist = new Instrumentalist with Singer {
     override def play(): Unit = ???
     override def sing(): Unit = ???
   }

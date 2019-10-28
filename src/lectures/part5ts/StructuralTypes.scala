@@ -46,12 +46,19 @@ object StructuralTypes extends App {
   closeShh(new AdvancedJavaCloseable)
   // closeShh(new HipsterCloseable) -> Illegal!
 
-  // using structural types as standalone types
+  /**
+    * using structural types as standalone types
+    */
+  /*
+   The compiler knows that closeable parameter is a type that meets the structural type:
+   type XXX = {
+    def close(): Unit
+   }
+   */
   def altClose(closeable: { def close(): Unit }): Unit = closeable.close()
 
 
   // type-checking => duck typing
-
   type SoundMaker = {
     def makeSound(): Unit
   }
@@ -67,9 +74,18 @@ object StructuralTypes extends App {
   val dog: SoundMaker = new Dog
   val car: SoundMaker = new Car
 
-  // static duck typing
+  /**
+    * Static duck typing?
+    * The compiler will do static duck typing according to the rule:
+    *   Something swims like a duck, flies like a duck, looks like a duck ... it is treated as a duck
+    */
 
-  // CAVEAT: based on reflection
+  /**
+    * what is structural type?
+    *   + A structural type is a type that define a particular structure, that some class, trait can conform to.
+    *   + Structural types is based on reflection.
+    *   + Structural types have a big impact on performance, so we should use this feature when absolutely needing.
+    */
 
   /*
     Exercises
