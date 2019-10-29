@@ -10,8 +10,8 @@ object SelfTypes extends App {
     def play(): Unit
   }
 
-  trait Singer { this: Instrumentalist => // SELF TYPE force whoever implements Singer to implement Instrumentalist
-
+  /* We must implement Singer class, its instance can play instrument */
+  trait Singer { self: Instrumentalist => // SELF TYPE force whoever implements Singer to implement Instrumentalist
     // rest of the implementation or API
     def sing(): Unit
   }
