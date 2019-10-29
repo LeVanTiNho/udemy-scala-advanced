@@ -71,15 +71,22 @@ object SelfTypes extends App {
   class ComponentB extends Component
   class DependentComponent(val component: Component)
 
-  // Cake pattern
+  /**
+    * Cake pattern
+    */
+
   trait ScalaComponent {
     // API
     def action(x: Int): String
   }
   trait ScalaDependentComponent { self: ScalaComponent =>
+    // We can use apis of ScalaComponent in ScalaDependentComponent
     def dependentAction(x: Int): String = action(x) + " this rocks!"
   }
+
   trait ScalaApplication { self: ScalaDependentComponent => }
+
+  // Why calling Cake Pattern? Because we have multiple layers of abstraction
 
   // layer 1 - small components
   trait Picture extends ScalaComponent
@@ -92,11 +99,13 @@ object SelfTypes extends App {
   // layer 3 - app
   trait AnalyticsApp extends ScalaApplication with Analytics
 
-  // cyclical dependencies
 
-  //  class X extends Y
-  //  class Y extends X
 
+  // cyclic extension is not allowed in Scala
+  // class X extends Y
+  // class Y extends X
+
+  // cyclical dependencies is allowed!
   trait X { self: Y => }
   trait Y { self: X => }
 }
