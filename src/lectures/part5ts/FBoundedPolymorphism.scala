@@ -62,17 +62,18 @@ object FBoundedPolymorphism extends App {
 
   // Solution 3 - FBP + self-types
 
-  trait Animal[A <: Animal[A]] { self: A =>
-      def breed: List[Animal[A]]
-    }
+  trait Animal[A <: Animal[A]] {
+    self: A =>
+    def breed: List[Animal[A]]
+  }
 
-    class Cat extends Animal[Cat] {
-      override def breed: List[Animal[Cat]] = ??? // List[Cat] !!
-    }
+  class Cat extends Animal[Cat] {
+    override def breed: List[Animal[Cat]] = ??? // List[Cat] !!
+  }
 
-    class Dog extends Animal[Dog] {
-      override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
-    }
+  class Dog extends Animal[Dog] {
+    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
+  }
 
   class Crocodile extends Animal[Dog] {
     override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
