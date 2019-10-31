@@ -1,8 +1,7 @@
 package lectures.part5ts
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 7
+
 object FBoundedPolymorphism extends App {
 
 //  trait Animal {
@@ -24,13 +23,18 @@ object FBoundedPolymorphism extends App {
 //  }
 //
 //  class Cat extends Animal {
-//    override def breed: List[Cat] = ??? // List[Cat] !!
+//    override def breed: List[Cat] = ??? // Ok
 //  }
 //
 //  class Dog extends Animal {
-//    override def breed: List[Cat] = ??? // List[Dog] !!
+//    override def breed: List[Dog] = ??? // Ok
+//    // override def breed: List[Cat] -> The compiler say Ok
+//    // the compiler will not force the programmer define return type is List[Dog] -> That's the problem
 //  }
 
+  /**
+    * The problem is we need some mechanism that the compiler force us to define return type is List[Dog]
+    */
 
   // Solution 2 - FBP
 
@@ -47,40 +51,41 @@ object FBoundedPolymorphism extends App {
 //  }
 //
 //  trait Entity[E <: Entity[E]] // ORM
+//
 //  class Person extends Comparable[Person] { // FBP
 //    override def compareTo(o: Person): Int = ???
 //  }
 //
 //  class Crocodile extends Animal[Dog] {
 //    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
-//  }
+//  } // -> That's the problem
 
   // Solution 3 - FBP + self-types
 
-//  trait Animal[A <: Animal[A]] { self: A =>
-//      def breed: List[Animal[A]]
-//    }
-//
-//    class Cat extends Animal[Cat] {
-//      override def breed: List[Animal[Cat]] = ??? // List[Cat] !!
-//    }
-//
-//    class Dog extends Animal[Dog] {
-//      override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
-//    }
+  trait Animal[A <: Animal[A]] { self: A =>
+      def breed: List[Animal[A]]
+    }
 
-//  class Crocodile extends Animal[Dog] {
-//    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
-//  }
-//
-//  trait Fish extends Animal[Fish]
-//  class Shark extends Fish {
-//    override def breed: List[Animal[Fish]] = List(new Cod) // wrong
-//  }
-//
-//  class Cod extends Fish {
-//    override def breed: List[Animal[Fish]] = ???
-//  }
+    class Cat extends Animal[Cat] {
+      override def breed: List[Animal[Cat]] = ??? // List[Cat] !!
+    }
+
+    class Dog extends Animal[Dog] {
+      override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
+    }
+
+  class Crocodile extends Animal[Dog] {
+    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
+  }
+
+  trait Fish extends Animal[Fish]
+  class Shark extends Fish {
+    override def breed: List[Animal[Fish]] = List(new Cod) // wrong
+  }
+
+  class Cod extends Fish {
+    override def breed: List[Animal[Fish]] = ???
+  }
 
   // Exercise
 
@@ -120,33 +125,33 @@ object FBoundedPolymorphism extends App {
 //  val cat = new Cat
 //  cat.breed
 
-  // Solution #5
-
-  trait Animal[A] { // pure type classes
-    def breed(a: A): List[A]
-  }
-
-  class Dog
-  object Dog {
-    implicit object DogAnimal extends Animal[Dog] {
-      override def breed(a: Dog): List[Dog] = List()
-    }
-  }
-
-  class Cat
-  object Cat {
-    implicit object CatAnimal extends Animal[Dog] {
-      override def breed(a: Dog): List[Dog] = List()
-    }
-  }
-
-  implicit class AnimalOps[A](animal: A) {
-    def breed(implicit animalTypeClassInstance: Animal[A]): List[A] =
-      animalTypeClassInstance.breed(animal)
-  }
-
-  val dog = new Dog
-  dog.breed
+//  // Solution #5
+//
+//  trait Animal[A] { // pure type classes
+//    def breed(a: A): List[A]
+//  }
+//
+//  class Dog
+//  object Dog {
+//    implicit object DogAnimal extends Animal[Dog] {
+//      override def breed(a: Dog): List[Dog] = List()
+//    }
+//  }
+//
+//  class Cat
+//  object Cat {
+//    implicit object CatAnimal extends Animal[Dog] {
+//      override def breed(a: Dog): List[Dog] = List()
+//    }
+//  }
+//
+//  implicit class AnimalOps[A](animal: A) {
+//    def breed(implicit animalTypeClassInstance: Animal[A]): List[A] =
+//      animalTypeClassInstance.breed(animal)
+//  }
+//
+//  val dog = new Dog
+//  dog.breed
 
 //  val cat = new Cat
 //  cat.breed
