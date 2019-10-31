@@ -75,9 +75,9 @@ object FBoundedPolymorphism extends App {
     override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
   }
 
-  class Crocodile extends Animal[Dog] {
-    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
-  }
+//  class Crocodile extends Animal[Dog] {
+//    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
+//  }
 
   trait Fish extends Animal[Fish]
   class Shark extends Fish {
@@ -85,7 +85,7 @@ object FBoundedPolymorphism extends App {
   }
 
   class Cod extends Fish {
-    override def breed: List[Animal[Fish]] = ???
+    override def breed: List[Animal[Fish]] = ??? // wrong
   }
 
   // Exercise
