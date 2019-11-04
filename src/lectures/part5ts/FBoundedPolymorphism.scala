@@ -25,11 +25,11 @@ object FBoundedPolymorphism extends App {
   }
 
   class Cat extends Animal {
-    override def breed: List[Cat] = ??? // Ok
+    override def breed: List[Cat] = ??? // Ok, because List[+A]
   }
 
   class Dog extends Animal {
-    override def breed: List[Dog] = ??? // Ok
+    override def breed: List[Dog] = ??? // Ok, because List[+A]
     // override def breed: List[Cat] -> The compiler say Ok, because List[+A]
     // the compiler will not force the programmer define return type is List[Dog] -> That's the problem
   }
