@@ -16,27 +16,31 @@ object FBoundedPolymorphism extends App {
 //    override def breed: List[Animal] = ??? // List[Dog] !!
 //  }
 
-  // Solution 1 - naive
+  /**
+    * Solution 1 - naive
+    */
 
-//  trait Animal {
-//    def breed: List[Animal]
-//  }
-//
-//  class Cat extends Animal {
-//    override def breed: List[Cat] = ??? // Ok
-//  }
-//
-//  class Dog extends Animal {
-//    override def breed: List[Dog] = ??? // Ok
-//    // override def breed: List[Cat] -> The compiler say Ok
-//    // the compiler will not force the programmer define return type is List[Dog] -> That's the problem
-//  }
+  trait Animal {
+    def breed: List[Animal]
+  }
+
+  class Cat extends Animal {
+    override def breed: List[Cat] = ??? // Ok
+  }
+
+  class Dog extends Animal {
+    override def breed: List[Dog] = ??? // Ok
+    // override def breed: List[Cat] -> The compiler say Ok, because List[+A]
+    // the compiler will not force the programmer define return type is List[Dog] -> That's the problem
+  }
 
   /**
     * The problem is we need some mechanism that the compiler force us to define return type is List[Dog]
     */
 
-  // Solution 2 - FBP
+  /**
+    * Solution 2 - recursive type: F-Bounded Polymorphism
+    */
 
 //  trait Animal[A <: Animal[A]] { // recursive type: F-Bounded Polymorphism
 //    def breed: List[Animal[A]]
@@ -60,7 +64,9 @@ object FBoundedPolymorphism extends App {
 //    override def breed: List[Animal[Dog]] = ??? // List[Dog] !!
 //  } // -> That's the problem
 
-  // Solution 3 - F-bounded Polymorphism + self-types
+  /**
+    * Solution 3 - F-bounded Polymorphism + self-types
+    */
 
 //  trait Animal[A <: Animal[A]] {
 //    self: A =>
@@ -90,43 +96,50 @@ object FBoundedPolymorphism extends App {
 
   // Exercise
 
-  // Solution 4 type classes!
+  /**
+    * Solution 4 type classes!
+    */
 
-  trait Animal
-  trait CanBreed[A] {
-    def breed(a: A): List[A]
-  }
+//  trait Animal
+//
+//  // b1: Type class
+//  trait CanBreed[A] {
+//    def breed(a: A): List[A]
+//  }
+//
+//  class Dog extends Animal
+//  object Dog {
+//    // b2: Type class object
+//    implicit object DogsCanBreed extends CanBreed[Dog] {
+//      def breed(a: Dog): List[Dog] = List[Dog]()
+//    }
+//  }
+//
+//  implicit class CanBreedOps[A <: Animal](animal: A) {
+//    def breed(implicit canBreed: CanBreed[A]): List[A] =
+//      canBreed.breed(animal)
+//  }
+//
+//  val dog = new Dog
+//  dog.breed // List[Dog]!!
+//  /*
+//    new CanBreedOps[Dog](dog).breed(Dog.DogsCanBreed)
+//  implicit value to pass to breed: Dog.DogsCanBreed
+//  */
+//
+//  class Cat extends Animal
+//  object Cat {
+//    implicit object CatsCanBreed extends CanBreed[Dog] {
+//      def breed(a: Dog): List[Dog] = List()
+//    }
+//  }
+//
+//  // val cat = new Cat
+//  // cat.breed -> The compiler shouts at us!!!
 
-  class Dog extends Animal
-  object Dog {
-    implicit object DogsCanBreed extends CanBreed[Dog] {
-      def breed(a: Dog): List[Dog] = List()
-    }
-  }
-
-  implicit class CanBreedOps[A](animal: A) {
-    def breed(implicit canBreed: CanBreed[A]): List[A] =
-      canBreed.breed(animal)
-  }
-
-  val dog = new Dog
-  dog.breed // List[Dog]!!
-  /*
-    new CanBreedOps[Dog](dog).breed(Dog.DogsCanBreed)
-    implicit value to pass to breed: Dog.DogsCanBreed
-   */
-
-  class Cat extends Animal
-  object Cat {
-    implicit object CatsCanBreed extends CanBreed[Dog] {
-      def breed(a: Dog): List[Dog] = List()
-    }
-  }
-
-  val cat = new Cat
-  cat.breed
-
-  // Solution #5
+  /**
+    * Solution #5 -> What the fuck? The solution below just trolls us!!!
+    */
 
 //  trait Animal[A] { // pure type classes
 //    def breed(a: A): List[A]
