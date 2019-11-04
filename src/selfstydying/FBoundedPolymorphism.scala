@@ -1,0 +1,5 @@
+package selfstydying
+
+class FBoundedPolymorphism {
+
+}
