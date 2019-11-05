@@ -1,8 +1,7 @@
 package lectures.part5ts
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 9
+
 object Reflection extends App {
 
   // reflection + macros + quasiquotes => METAPROGRAMMING

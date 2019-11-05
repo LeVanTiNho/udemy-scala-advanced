@@ -3,9 +3,8 @@ package lectures.part5ts
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
-  * Created by Daniel.
-  */
+// Lesson 8
+
 object HigherKindedTypes extends App {
 
   trait AHigherKindedType[F[_]]
