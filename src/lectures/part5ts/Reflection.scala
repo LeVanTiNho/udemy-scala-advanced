@@ -4,30 +4,49 @@ package lectures.part5ts
 
 object Reflection extends App {
 
+  /**
+    * How do I instantiate a class or invoke a method by calling just its name dynamically at runtime?
+    */
+
   // reflection + macros + quasiquotes => METAPROGRAMMING
 
   case class Person(name: String) {
     def sayMyName(): Unit = println(s"Hi, my name is $name")
   }
 
-  // 0 - import
+  // 0 - import universe package (contains reflection apis)
+
   import scala.reflect.runtime.{universe => ru}
 
   // 1 - MIRROR
-  val m = ru.runtimeMirror(getClass.getClassLoader)
+  val runtimeMirror = ru.runtimeMirror(getClass.getClassLoader)
   // 2 - create a class object = "description"
-  val clazz = m.staticClass("lectures.part5ts.Reflection.Person") // creating a class object by NAME
+  val symbolOfPerson = runtimeMirror.staticClass("lectures.part5ts.Reflection.Person") // creating a class object by NAME
   // 3 - create a reflected mirror = "can DO things"
-  val cm = m.reflectClass(clazz)
+  val mirrorOfPerson = runtimeMirror.reflectClass(symbolOfPerson)
   // 4 - get the constructor
-  val constructor = clazz.primaryConstructor.asMethod
+  val constructor = symbolOfPerson.primaryConstructor.asMethod
   // 5 - reflect the constructor
-  val constructorMirror = cm.reflectConstructor(constructor)
+  val constructorMirror = mirrorOfPerson.reflectConstructor(constructor)
   // 6 - invoke the constructor
   val instance = constructorMirror.apply("John")
 
   println(instance)
 
+  /**
+    * Note:
+    *   - Symbol -> Description of classes, methods, constructors, ..
+    *       + ClassSymbol -> Class Object describes a Class
+    *       + MethodSymbol -> Class Object describes a method
+    *       ..
+    *   - Mirror -> Some thing can access the members of a particular Symbol reflected by a particular Mirror and can do things
+    *       + ClassMirror
+    *       + MethodMirror
+    *       + FieldMirror
+    *       ...
+    */
+
+  /*
   // I have an instance
   val p = Person("Mary") // from the wire as a serialized object
   // method name computed from somewhere else
@@ -94,4 +113,5 @@ object Reflection extends App {
   val sameMethod = reflected.reflectMethod(anotherMethodSymbol)
   // 5 - invoke the method
   sameMethod.apply()
+  */
 }
