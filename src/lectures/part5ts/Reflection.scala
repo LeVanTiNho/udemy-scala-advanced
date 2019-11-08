@@ -34,30 +34,21 @@ object Reflection extends App {
   println(instance)
 
   /**
-    * Note:
-    *   - Symbol -> Description of classes, methods, constructors, ..
-    *       + ClassSymbol -> Class Object describes a Class
-    *       + MethodSymbol -> Class Object describes a method
-    *       ..
-    *   - Mirror -> Some thing can access the members of a particular Symbol reflected by a particular Mirror and can do things
-    *       + ClassMirror
-    *       + MethodMirror
-    *       + FieldMirror
-    *       ...
+    * Use case:
+    *   We have a object, we don't know the type of that object, but we know the name of the method of the type of that object.
+    *   We can invoke that method by name!
     */
-
-  /*
   // I have an instance
-  val p = Person("Mary") // from the wire as a serialized object
+  val person = Person("Mary") // from the wire as a serialized object
   // method name computed from somewhere else
   val methodName = "sayMyName"
   // 1 - mirror
   // 2 - reflect the instance
-  val reflected = m.reflect(p)
+  val instanceMirrorOfThePerson = runtimeMirror.reflect(person)
   // 3 - method symbol
   val methodSymbol = ru.typeOf[Person].decl(ru.TermName(methodName)).asMethod
   // 4 - reflect the method = can DO things
-  val method = reflected.reflectMethod(methodSymbol)
+  val method = instanceMirrorOfThePerson.reflectMethod(methodSymbol)
   // 5 - invoke the method
 
   method.apply()
@@ -96,6 +87,7 @@ object Reflection extends App {
   val typeArgs = getTypeArguments(myMap)//(typeTag: TypeTag[MyMap[Int,String]])
   println(typeArgs)
 
+  /*
   def isSubtype[A, B](implicit ttagA: TypeTag[A], ttagB: TypeTag[B]): Boolean = {
     ttagA.tpe <:< ttagB.tpe
   }
@@ -110,8 +102,7 @@ object Reflection extends App {
   // 3 - method symbol
   val anotherMethodSymbol = typeTag[Person].tpe.decl(ru.TermName(methodName)).asMethod
   // 4 - reflect the method = can DO things
-  val sameMethod = reflected.reflectMethod(anotherMethodSymbol)
+  val sameMethod = instanceMirrorOfThePerson.reflectMethod(anotherMethodSymbol)
   // 5 - invoke the method
-  sameMethod.apply()
-  */
+  sameMethod.apply()*/
 }
