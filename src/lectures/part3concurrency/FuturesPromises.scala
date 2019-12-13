@@ -102,8 +102,8 @@ object FuturesPromises extends App {
 
   // for-comprehensions
   for {
-    mark <- SocialNetwork.fetchProfile("fb.id.1-zuck")
-    bill <- SocialNetwork.fetchBestFriend(mark)
+    mark <- SocialNetwork.fetchProfile("fb.id.1-zuck") // Future[Profile]
+    bill <- SocialNetwork.fetchBestFriend(mark) // Future[Profile]
   } mark.poke(bill)
 
   Thread.sleep(1000)
@@ -118,10 +118,6 @@ object FuturesPromises extends App {
   }
 
   val fallbackResult =  SocialNetwork.fetchProfile("unknown id").fallbackTo(SocialNetwork.fetchProfile("fb.id.0-dummy"))
-
-  /**
-    * Here
-    */
 
   /**
     * Blocking on Futures
@@ -163,11 +159,6 @@ object FuturesPromises extends App {
 
   println(BankingApp.purchase("Daniel", "iPhone 12", "rock the jvm store", 3000))
 
-  /*
-  Note: map, flatMap, filter on Futures will return new Futures, the tasks of the old Futures will be processed in parallel,
-  the result when that task done will be return in the sew Futures
-    */
-
   /**
     * Promise
     */
@@ -185,7 +176,7 @@ object FuturesPromises extends App {
     println("[producer] crunching numbers...")
     Thread.sleep(500)
     // "fulfilling" the promise
-    promise.success(42)
+    promise.success(42) // -> The promise allow us to set when and how we set the future it controls
     println("[producer] done")
   })
 
