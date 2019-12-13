@@ -42,22 +42,22 @@ object FuturesPromises extends App {
   // mini social network
 
   case class Profile(id: String, name: String) {
-    def poke(anotherProfile: Profile) =
+    def poke(anotherProfile: Profile): Unit =
       println(s"${this.name} poking ${anotherProfile.name}")
   }
 
   object SocialNetwork {
     // "database"
-    val names = Map(
+    private val names = Map(
       "fb.id.1-zuck" -> "Mark",
       "fb.id.2-bill" -> "Bill",
       "fb.id.0-dummy" -> "Dummy"
     )
-    val friends = Map(
+    private val friends = Map(
       "fb.id.1-zuck" -> "fb.id.2-bill"
     )
 
-    val random = new Random()
+    private val random = new Random()
 
     // API
     def fetchProfile(id: String): Future[Profile] = Future {
@@ -79,25 +79,26 @@ object FuturesPromises extends App {
   // client: mark to poke bill
   val futureOfMarkProfile = SocialNetwork.fetchProfile("fb.id.1-zuck")
 
-  // the onComplete method run on some Thread that we don't know
-  // When the Future completes, it the onComplete a Try
   futureOfMarkProfile.onComplete {
-    case Success(markProfile) => {
-      val bill = SocialNetwork.fetchBestFriend(markProfile)
-      bill.onComplete {
-        case Success(billProfile) => markProfile.poke(billProfile)
+    case Success(profileOfMark) => {
+
+      val futureOfMarkBestFriend = SocialNetwork.fetchBestFriend(profileOfMark)
+
+      futureOfMarkBestFriend.onComplete {
+        case Success(profileOfMarkBestFriend) => profileOfMark.poke(profileOfMarkBestFriend)
         case Failure(e) => e.printStackTrace()
       }
     }
-    case Failure(ex) => ex.printStackTrace()
+
+    case Failure(e) => e.printStackTrace()
   }
 
 
   // functional composition of futures
   // map, flatMap, filter
   val futureOfMarkName = futureOfMarkProfile.map(profile => profile.name)
-  val marksBestFriend = futureOfMarkProfile.flatMap(profile => SocialNetwork.fetchBestFriend(profile))
-  val zuckBestFriendRestricted = marksBestFriend.filter(profile => profile.name.startsWith("Z"))
+  val futureOfMarkBestFriend = futureOfMarkProfile.flatMap(profile => SocialNetwork.fetchBestFriend(profile))
+  val futureOfMarkBestFriendRestricted = futureOfMarkBestFriend.filter(profile => profile.name.startsWith("Z"))
 
   // for-comprehensions
   for {
