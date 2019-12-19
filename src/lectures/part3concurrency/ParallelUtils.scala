@@ -1,4 +1,3 @@
-/*
 package lectures.part3concurrency
 
 import java.util.concurrent.atomic.AtomicReference
@@ -62,7 +61,7 @@ object ParallelUtils extends App {
   List(1,2,3).par.foreach(sum += _)
   println(sum)  // race conditions!
 
-  // configuring
+  // configuring the threads do tass on a parallel collection
   aParVector.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(2))
   /*
     alternatives
@@ -82,6 +81,10 @@ object ParallelUtils extends App {
 
   // 2 - atomic ops and references
 
+  /**
+    * Atomic operation is a operation that cannot be intercepted by another thread
+    */
+
   val atomic = new AtomicReference[Int](2)
 
   val currentValue = atomic.get() // thread-safe read
@@ -100,4 +103,3 @@ object ParallelUtils extends App {
   atomic.getAndAccumulate(12, _ + _)
 
 }
-*/
