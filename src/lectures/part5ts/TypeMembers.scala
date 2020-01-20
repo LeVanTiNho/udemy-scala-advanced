@@ -1,32 +1,36 @@
 package lectures.part5ts
 
 // Lesson 3
-
 object TypeMembers extends App {
-
 
   class Animal
   class Dog extends Animal
   class Cat extends Animal
 
   class AnimalCollection {
-    // abstract type member
-    type AnimalType
-    type BoundedAnimal <: Animal
-    type SuperBoundedAnimal >: Dog <: Animal
+    // We can use type member in define variables, values, method signatures
 
-    // Alias type member
-    type AnimalC = Cat
+    // abstract type member
+    // Abstract type member is usually used for The compiler to do type inference
+    type AnimalType
+    type UpperBoundedAnimal <: Animal // Upper bounded
+    type SuperBoundedAnimal >: Dog // supper bounded
+    type MultiBoundedAnimal >: Dog <: Animal
+
+    // Concrete type member
+    type AnimalC = Cat  // Alias type member
   }
 
-  // Abstract type member is usually used for The compiler to do type inference
   val ac = new AnimalCollection
+
+  // The following declarations is illegal
   // val dog: ac.AnimalType = ???
-  // val dog: ac.AnimalType = new Dog -> Illegal
+  // val dog: ac.AnimalType = new Dog
+  // val cat: ac.UpperBoundedAnimal = new Cat
+  // val cat: ac.UpperBoundedAnimal = new Animal
 
-  // val cat: ac.BoundedAnimal = new Cat -> Illegal
-
-  val pup: ac.SuperBoundedAnimal = new Dog // legal! Because SuperBoundedAnimal has bound >: Dog
+  // The following declarations is legal
+  val pup: ac.SuperBoundedAnimal = new Dog
   val cat: ac.AnimalC = new Cat
 
 
@@ -34,28 +38,32 @@ object TypeMembers extends App {
   type CatAlias = Cat
   val anotherCat: CatAlias = new Cat
 
-  // alternative to generics
-  // Abstract type members is sometimes used in API, that's similar to generics
+
+  /**
+    * Abstract type members is sometimes used in API, that's similar to generics
+    */
   trait MyList {
     type T
     def add(element: T): MyList
   }
 
-  class NonEmptyList(value: Int) extends MyList {
-    override type T = Int // We assign Abstract type T explicitly by Int
-    def add(element: Int): MyList = ???
+  class NonEmptyList extends MyList {
+    // We override type T
+    override type T = Int
+    def add(element: T): MyList = ???
   }
 
-  // .type
-  // We can use some value's type as type alias
+  // .type to get the type of a value, and then we can assign it to a type member
   type CatsType = cat.type
-  val newCat: CatsType = cat
-  // new CatsType -> Illegal! Because, The compiler don't know the the constructor to be used in this case
+  // val newCat: CatsType = cat
+  // new CatsType -> Illegal! Because, The compiler don't know the the constructor to be used in this case like any other type members
 
-  /*
-    Exercise - enforce a type to be applicable to SOME TYPES only
-   */
-  // LOCKED
+
+  /**
+    * Exercise - enforce a type to be applicable to SOME TYPES only
+    */
+
+  // MyList trait in some library, we want to enforce A is applicable to Number only
   trait MList {
     type A
     def head: A
@@ -73,7 +81,7 @@ object TypeMembers extends App {
 //    def tail = tl
 //  }
 
-  // OK
+  // type member A in ApplicableToNumbers trait is more specific than A in MList -> override
   class IntList(hd: Integer, tl: IntList) extends MList with ApplicableToNumbers {
     type A = Integer
     def head = hd

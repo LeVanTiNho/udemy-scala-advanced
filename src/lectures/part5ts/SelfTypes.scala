@@ -1,18 +1,22 @@
 package lectures.part5ts
 
 // Lesson 6
-
 object SelfTypes extends App {
 
-  // requiring a type to be mixed in
+  // A way of requiring a type to be mixed in
 
   trait Instrumentalist {
     def play(): Unit
   }
 
-  /* We must implement Singer class, its instance can play instrument */
-  trait Singer { self: Instrumentalist => // SELF TYPE force whoever implements Singer to implement Instrumentalist
-    // rest of the implementation or API
+  trait Singer {
+    // SELF TYPE force whoever implements Singer to implement Instrumentalist
+    // this is completely independent on the rest of the implementation
+    // this: Instrumentalist =>
+    // scala: Instrumentalist =>
+    self: Instrumentalist =>
+
+
     def sing(): Unit
   }
 
@@ -30,6 +34,13 @@ object SelfTypes extends App {
    */
 
   // With Anonymous class
+
+//  // Illegal
+//  val jamesHetfield = new Singer {
+//    override def sing(): Unit = ???
+//  }
+
+  // legal
   val jamesHetfield = new Singer with Instrumentalist {
     override def play(): Unit = ???
     override def sing(): Unit = ???
@@ -51,7 +62,7 @@ object SelfTypes extends App {
   }
 
   /**
-    * vs inheritance
+    * Self-type vs inheritance
     */
   class A
   class B extends A // B IS AN A
@@ -60,7 +71,7 @@ object SelfTypes extends App {
   trait S { self: T => } // S REQUIRES a T, T is part of S
 
   /**
-    * Self-type = CAKE PATTERN => "dependency injection"
+    * CAKE PATTERN => "dependency injection"
     */
 
   // Dependency injection
@@ -79,6 +90,7 @@ object SelfTypes extends App {
     // API
     def action(x: Int): String
   }
+
   trait ScalaDependentComponent { self: ScalaComponent =>
     // We can use apis of ScalaComponent in ScalaDependentComponent
     def dependentAction(x: Int): String = action(x) + " this rocks!"
@@ -98,9 +110,7 @@ object SelfTypes extends App {
 
   // layer 3 - app
   trait AnalyticsApp extends ScalaApplication with Analytics
-
-
-
+  
   // cyclic extension is not allowed in Scala
   // class X extends Y
   // class Y extends X
