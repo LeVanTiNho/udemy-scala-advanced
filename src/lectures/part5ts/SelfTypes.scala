@@ -110,7 +110,7 @@ object SelfTypes extends App {
 
   // layer 3 - app
   trait AnalyticsApp extends ScalaApplication with Analytics
-  
+
   // cyclic extension is not allowed in Scala
   // class X extends Y
   // class Y extends X
