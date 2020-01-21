@@ -18,7 +18,7 @@ object ImplicitsIntro extends App {
   }
 
   /**
-    * conversion method (implicit method)
+    * conversion method - implicit method
     */
   implicit def fromStringToPerson(str: String): Person = Person(str)
 
