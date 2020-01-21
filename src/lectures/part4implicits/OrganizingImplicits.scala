@@ -49,10 +49,6 @@ object OrganizingImplicits extends App {
       - all the types involved = A or any supertype
     */
 
-  /**
-    * Best practise:
-    * Implicits for implicit paras should be put in different objects, when needing, we im
-    */
 
   object AlphabeticNameOrdering {
     implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
