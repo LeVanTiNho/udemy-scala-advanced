@@ -3,16 +3,14 @@ package lectures.part4implicits
 // Lesson 2
 object OrganizingImplicits extends App {
 
-  /**
-    * Implicit parameters
-    */
+
   implicit val reverseOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
   // implicit def reverseOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
   // implicit val normalOrdering: Ordering[Int] = Ordering.fromLessThan(_ < _)
 
   println(List(1,4,5,3,2).sorted)
 
-  // scala.Predef is automatically imported to code here
+  // scala.Predef is automatically imported to code
 
   /*
     Implicits (used as implicit parameters):
@@ -32,6 +30,7 @@ object OrganizingImplicits extends App {
 
   object Person {
     implicit val alphabeticOrdering: Ordering[Person] = Ordering.fromLessThan((a, b) => a.name.compareTo(b.name) < 0)
+    // Ordering.fromLessThan(a, b) means if a < b return true
   }
 
   // Bad design: Putting the implicit argument in local scope
