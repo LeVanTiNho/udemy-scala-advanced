@@ -3,7 +3,7 @@ package lectures.part4implicits
 // Lesson 4
 
 /**
-  * Use implicits to pimp a library
+  * Enrichment allow us to decorate existing classes that we have not access to with additional methods or properties
   */
 object PimpMyLibrary extends App {
 
@@ -12,7 +12,7 @@ object PimpMyLibrary extends App {
     * Implicit methods, functions
     */
 
-  implicit class RichInt(val value: Int) extends AnyVal {
+  implicit class RichInt(val value: Int) extends AnyVal { // extends AnyVal for memory optimization purposes
     def isEven: Boolean = value % 2 == 0
     def sqrt: Double = Math.sqrt(value)
 

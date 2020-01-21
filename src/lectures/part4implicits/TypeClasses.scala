@@ -43,7 +43,7 @@ object TypeClasses extends App {
 
   /*
     1 - lost type safety
-    2 - need to  modify the code every time
+    2 - need to modify the code every time
     3 - still ONE implementation
    */
 
@@ -68,7 +68,7 @@ object TypeClasses extends App {
     override def serialize(date: Date): String = s"<div>${date.toString()}</div>"
   }
 
-  // 2 - we can define MULTIPLE serializers fon one type
+  // 2 - we can define MULTIPLE serializers for one type
   object PartialUserSerializer extends HTMLSerializer[User] {
     override def serialize(user: User): String = s"<div>${user.name} </div>"
   }
@@ -99,6 +99,10 @@ object TypeClasses extends App {
   object FullEquality extends Equal[User] {
     override def apply(a: User, b: User): Boolean = a.name == b.name && a.email == b.email
   }
+
+  /*
+  Type class describes a set of properties or of methods a type must by have in order to belong to that specific type class
+   */
 
   /**
     * Part 2: implicits and type class
