@@ -165,8 +165,9 @@ object MagnetPattern extends App {
     "hahaha"
   }
 
-  // handle(sideEffectMethod()) // execute normally
+  handle(sideEffectMethod()) // execute normally
 
+  // execute incorrectly, why????
   handle {
     println("Hello, Scala")
     "magnet"
