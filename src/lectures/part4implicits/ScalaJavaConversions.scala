@@ -13,13 +13,6 @@ object ScalaJavaConversions extends App {
   (1 to 5).foreach(javaSet.add)
   println(javaSet)
 
-  /*
-  The steps Scala compiler does:
-  1. The compiler notices that the Java Set doesn't has asScala method
-  2. The compiler will search for an implicit wrapper class of a Java Set has the asScala method, but it won't find out
-  3. The Compiler will search for an implicit conversion method of a Java Set, it will find out the asScalaConverter method,
-  it is aware that method converts a Java Set to an AsScala, and the AsScala wrapper class has asScala method
-   */
   val scalaSet = javaSet.asScala
 
   /*
