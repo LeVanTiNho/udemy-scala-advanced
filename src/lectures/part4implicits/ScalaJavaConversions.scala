@@ -23,24 +23,22 @@ object ScalaJavaConversions extends App {
     ju.Map - collection.mutable.Map
    */
 
-
   import collection.mutable._
   // ArrayBuffer is a Buffer
   val scalaBuffer = ArrayBuffer[Int](1, 2, 3)
   val javaList = scalaBuffer.asJava
 
-  println(javaList.asScala eq scalaBuffer)
-
+  println(javaList.asScala eq scalaBuffer) // eq method is used to compare references of two instances
 
   val scalaIterable = List(1,2,3) // immutable.List
   val javaIterable = scalaIterable.asJava
   val backToScala = javaIterable.asScala
   println(backToScala eq scalaIterable) // false
-  println(backToScala == scalaIterable) // true
+  println(backToScala == scalaIterable) // == operator is used to compare values of two instances
   // The series of conversions from scala to java back to scala may not remain the same object
 
   // scalaIterable is a immutable collection, when it's converted to javaIterable is still immutable
-  // javaIterable.add(7)
+  // javaIterable.add(7) will throw exception
 
   /*
     Exercise
