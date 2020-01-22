@@ -144,7 +144,7 @@ object TypeClasses extends App {
    */
 
   /**
-    * Part 3
+    * Part 3: Type enrichment vs type class
     */
   /*
   The HTMLEnrichment class is a conversion class (wrapper) of an generic type
@@ -154,9 +154,11 @@ object TypeClasses extends App {
   }
 
   println(john.toHtml)  // println(new HTMLEnrichment[User](john).toHTML(UserSerializer))
+
   // COOL!
   /*
-    - extend to new types (by implicit wrapper)
+  The cool things of enrichment and implicitly:
+    - easily extend to new types (by implicit wrapper)
     - choose implementation (by inject implicitly or explicitly)
     - super expressive!
    */
