@@ -26,11 +26,13 @@ object MagnetPattern extends App {
     def receive[T : Serializer](message: T): Int
     def receive[T : Serializer](message: T, statusCode: Int): Int
     def receive(future: Future[P2PRequest]): Int
-    // def receive(future: Future[P2PResponse]): Int
+    //def receive(future: Future[P2PResponse]): Int
     // lots of overloads
   }
 
   /*
+  The problems with method overloading:
+
     1 - type erasure - The generic types are erased at compile time
 
     2 - lifting doesn't work for all overloads
@@ -38,6 +40,7 @@ object MagnetPattern extends App {
       val receiveFV = receive _ // ?!
 
     3 - code duplication
+
     4 - type inference and default args
 
       actor.receive(?!)
@@ -65,6 +68,10 @@ object MagnetPattern extends App {
       24
     }
   }
+
+  /*
+
+   */
 
   /*
   What the compiler does here?
@@ -144,6 +151,7 @@ object MagnetPattern extends App {
   }
 
   def handle(magnet: HandleMagnet) = magnet()
+  // def handle(magnet: => HandleMagnet) = magnet()
 
   implicit class StringHandle(s: => String) extends HandleMagnet {
     override def apply(): Unit = {
@@ -163,10 +171,14 @@ object MagnetPattern extends App {
     println("Hello, Scala")
     "magnet"
   }
-  /*
-  Explaination:
-  - the sideEffectMethod is lifted to a function and that function is passed to StringHandle constructor
-  - the expression is executed, "magnet" string value is return, that string is passed to StringHandle constructor
-   */
   // careful!
+}
+
+object CallByNameTest extends App {
+  class A(s: => String)
+  // case class A(s: => String) -> not allowed
+  val a = new A ({
+    println("Hello")
+    "hello"
+  })
 }
