@@ -34,7 +34,6 @@ object PimpMyLibrary extends App {
 
       concatenate(value)
     }
-
   }
 
   implicit class RicherInt(richInt: RichInt) {
@@ -91,6 +90,7 @@ object PimpMyLibrary extends App {
 
   // danger zone
   // Use implicit method as little as possible
+  // We difficultly anticipate what the behavior when we use implicit methods
   implicit def intToBoolean(i: Int): Boolean = i == 1
 
   /*

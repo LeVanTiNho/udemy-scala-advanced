@@ -35,10 +35,10 @@ object SelfTypes extends App {
 
   // With Anonymous class
 
-//  // Illegal
-//  val jamesHetfield = new Singer {
-//    override def sing(): Unit = ???
-//  }
+  // Illegal
+  val jamesHetfield = new Singer {
+    override def sing(): Unit = ???
+  }
 
   // legal
   val jamesHetfield = new Singer with Instrumentalist {
@@ -52,11 +52,11 @@ object SelfTypes extends App {
     override def sing(): Unit = ???
   }
 
+  // Legal
   class Guitarist extends Instrumentalist {
     override def play(): Unit = println("(guitar solo)")
   }
 
-  // Legal
   val ericClapton = new Guitarist with Singer {
     override def sing(): Unit = ???
   }
@@ -74,7 +74,7 @@ object SelfTypes extends App {
     * CAKE PATTERN => "dependency injection"
     */
 
-  // Dependency injection
+  // Dependency injection we usually see in Java.
   class Component {
     // API
   }
@@ -85,7 +85,6 @@ object SelfTypes extends App {
   /**
     * Cake pattern
     */
-
   trait ScalaComponent {
     // API
     def action(x: Int): String
